@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:health_app/ui/SignIn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:health_app/ui/dbSchema.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 
 class SignUp extends StatefulWidget{
   
@@ -12,15 +13,35 @@ class SignUp extends StatefulWidget{
 
 class SignUpState extends State<SignUp>{
   String _email, _password;
+  double _weight, _height;
   final _formKey = GlobalKey<FormState>();
 
-  Replies _replyObj = new Replies(
-    name: 'Test',
-    age: 20,
-    job: 'student'
-  );
-
   FirebaseUser user;
+  FocusNode myFocusNode;
+
+  String _datetime = '';
+  int _year = 2018;
+  int _month = 11;
+  int _date = 11;
+
+  String _lang = 'i18n';
+  String _format = 'yyyy-mm-dd';
+  bool _showTitleActions = true;
+
+  TextEditingController _langCtrl = TextEditingController();
+  TextEditingController _formatCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _langCtrl.text = 'i18n';
+    _formatCtrl.text = 'yyyy-mm-dd';
+
+    DateTime now = DateTime.now();
+    _year = now.year;
+    _month = now.month;
+    _date = now.day;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +86,35 @@ class SignUpState extends State<SignUp>{
                   ),
                   obscureText: true,
                 ),
+                TextFormField(
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  validator: (input){
+                   if(input.isEmpty){
+                     return 'Please fill your current weight';
+                   }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Weight'
+                  )
+                ),
+                TextFormField(
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  validator: (input){
+                   if(input.isEmpty){
+                     return 'Please fill your current weight';
+                   }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Height'
+                  )
+                ),
+                TextFormField(
+                  focusNode: myFocusNode,
+                  decoration: InputDecoration(
+                    labelText: 'Date Of Birth'
+                  ),
+                ),
+                
                 new Container(
                   margin: const EdgeInsets.only(top:10.0),
                   child: Column(
@@ -74,10 +124,16 @@ class SignUpState extends State<SignUp>{
                           signUpFlutter();
                         },
                         child: Text('Sign Up'),
+                      ),
+                      RaisedButton(
+                        onPressed: (){
+                          _showDatePicker();
+                        },
+                        child: Text('date'),
                       )
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -94,7 +150,6 @@ class SignUpState extends State<SignUp>{
       debugPrint(_password);
       try{
         this.user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
-        debugPrint(user.uid);
         _addData();
       }catch(e){
         print(e.message);
@@ -102,6 +157,7 @@ class SignUpState extends State<SignUp>{
       
     }
   }
+
 
   void _navigateToSignIn() async {
     await Navigator.push(
@@ -120,6 +176,48 @@ class SignUpState extends State<SignUp>{
       });
     });
     Navigator.of(context).pop();
+  }
+
+  void _showDatePicker() {
+    final bool showTitleActions = false;
+    DatePicker.showDatePicker(
+      context,
+      showTitleActions: _showTitleActions,
+      minYear: 1970,
+      maxYear: 2020,
+      initialYear: _year,
+      initialMonth: _month,
+      initialDate: _date,
+      confirm: Text(
+        'custom ok',
+        style: TextStyle(color: Colors.red),
+      ),
+      cancel: Text(
+        'custom cancel',
+        style: TextStyle(color: Colors.cyan),
+      ),
+      locale: _lang,
+      dateFormat: _format,
+      onChanged: (year, month, date) {
+        debugPrint('onChanged date: $year-$month-$date');
+
+        if (!showTitleActions) {
+          _changeDatetime(year, month, date);
+        }
+      },
+      onConfirm: (year, month, date) {
+        _changeDatetime(year, month, date);
+      },
+    );
+  }
+
+  void _changeDatetime(int year, int month, int date) {
+    setState(() {
+      _year = year;
+      _month = month;
+      _date = date;
+      _datetime = '$year-$month-$date';
+    });
   }
 
 }
