@@ -5,24 +5,22 @@ import 'package:health_app/ui/SignIn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 
-class SignUp extends StatefulWidget{
-  
+class SignUp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => SignUpState();
 }
 
-class SignUpState extends State<SignUp>{
+class SignUpState extends State<SignUp> {
   String _email, _password;
-  double _weight, _height;
   final _formKey = GlobalKey<FormState>();
 
+
   FirebaseUser user;
-  FocusNode myFocusNode;
 
   String _datetime = '';
-  int _year = 2018;
-  int _month = 11;
-  int _date = 11;
+  int _year;
+  int _month;
+  int _date;
 
   String _lang = 'i18n';
   String _format = 'yyyy-mm-dd';
@@ -30,6 +28,7 @@ class SignUpState extends State<SignUp>{
 
   TextEditingController _langCtrl = TextEditingController();
   TextEditingController _formatCtrl = TextEditingController();
+  var txt = new TextEditingController();
 
   @override
   void initState() {
@@ -43,6 +42,10 @@ class SignUpState extends State<SignUp>{
     _date = now.day;
   }
 
+  void _onFocusChange() {
+    _showDatePicker();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -51,90 +54,73 @@ class SignUpState extends State<SignUp>{
       appBar: AppBar(
         title: Text('Sign Up'),
       ),
-      
       body: Center(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  validator: (input){
-                    if(input.isEmpty){
-                      return 'Please fill the form';
-                    }
-                  },
-                  onSaved: (input) => _email = input,
-                  decoration: InputDecoration(
-                    labelText: 'Email'
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    validator: (input) {
+                      if (input.isEmpty) {
+                        return 'Please fill the form';
+                      }
+                    },
+                    onSaved: (input) => _email = input,
+                    decoration: InputDecoration(labelText: 'Email'),
                   ),
-                ),
-                
-                //SECTION password
-                TextFormField(
-                  validator: (input){
-                    if(input.isEmpty){
-                      return 'Please fill the password';
-                    }else if(input.length < 6){
-                      return 'Your password is less than 6 letter';
-                    }
-                  },
-                  onSaved: (input) => _password = input,
-                  decoration: InputDecoration(
-                    labelText: 'Password'
+
+                  //SECTION password
+                  TextFormField(
+                    validator: (input) {
+                      if (input.isEmpty) {
+                        return 'Please fill the password';
+                      } else if (input.length < 6) {
+                        return 'Your password is less than 6 letter';
+                      }
+                    },
+                    onSaved: (input) => _password = input,
+                    decoration: InputDecoration(labelText: 'Password'),
+                    obscureText: true,
                   ),
-                  obscureText: true,
-                ),
-                TextFormField(
-                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                  validator: (input){
-                   if(input.isEmpty){
-                     return 'Please fill your current weight';
-                   }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Weight'
-                  )
-                ),
-                TextFormField(
-                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                  validator: (input){
-                   if(input.isEmpty){
-                     return 'Please fill your current weight';
-                   }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Height'
-                  )
-                ),
-                TextFormField(
-                  focusNode: myFocusNode,
-                  decoration: InputDecoration(
-                    labelText: 'Date Of Birth'
-                  ),
-                ),
-                
-                new Container(
-                  margin: const EdgeInsets.only(top:10.0),
-                  child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                        onPressed: (){
-                          signUpFlutter();
-                        },
-                        child: Text('Sign Up'),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: TextFormField(
+                      controller: txt,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.date_range,
+                          size: 28.0,
+                        ),
+                        suffixIcon: IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              setState(() {
+                                _showDatePicker();
+                                txt.text = "";
+                              });
+                            }),
+                        labelText: "Date Of Birth"
                       ),
-                      RaisedButton(
-                        onPressed: (){
-                          _showDatePicker();
-                        },
-                        child: Text('date'),
-                      )
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  new Container(
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: Column(
+                      children: <Widget>[
+                        RaisedButton(
+                          onPressed: () {
+                            signUpFlutter();
+                          },
+                          child: Text('Sign Up'),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -144,20 +130,19 @@ class SignUpState extends State<SignUp>{
 
   Future<void> signUpFlutter() async {
     final formState = _formKey.currentState;
-    if(formState.validate()){
+    if (formState.validate()) {
       formState.save();
       debugPrint(_email);
       debugPrint(_password);
-      try{
-        this.user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+      try {
+        this.user = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: _email, password: _password);
         _addData();
-      }catch(e){
+      } catch (e) {
         print(e.message);
       }
-      
     }
   }
-
 
   void _navigateToSignIn() async {
     await Navigator.push(
@@ -166,20 +151,16 @@ class SignUpState extends State<SignUp>{
     );
   }
 
-  void _addData(){
+  void _addData() {
     Firestore.instance.runTransaction((Transaction transaction) async {
-      DocumentReference reference = Firestore.instance.collection('users').document('${user.uid}');
-      await reference.setData({
-        "name": 'benning',
-        "age": 20,
-        "job": 'student'
-      });
+      DocumentReference reference =
+          Firestore.instance.collection('users').document('${user.uid}');
+      await reference.setData({"name": 'benning', "age": 20, "job": 'student'});
     });
     Navigator.of(context).pop();
   }
 
   void _showDatePicker() {
-    final bool showTitleActions = false;
     DatePicker.showDatePicker(
       context,
       showTitleActions: _showTitleActions,
@@ -198,26 +179,15 @@ class SignUpState extends State<SignUp>{
       ),
       locale: _lang,
       dateFormat: _format,
-      onChanged: (year, month, date) {
-        debugPrint('onChanged date: $year-$month-$date');
-
-        if (!showTitleActions) {
-          _changeDatetime(year, month, date);
-        }
-      },
+      onChanged: (year, month, date) {},
       onConfirm: (year, month, date) {
-        _changeDatetime(year, month, date);
+        _date = date;
+        _year = year;
+        _month = month;
+        debugPrint("$_date : $_month : $_year");
+        txt.text =
+            _date.toString() + "/" + _month.toString() + "/" + _year.toString();
       },
     );
   }
-
-  void _changeDatetime(int year, int month, int date) {
-    setState(() {
-      _year = year;
-      _month = month;
-      _date = date;
-      _datetime = '$year-$month-$date';
-    });
-  }
-
 }
