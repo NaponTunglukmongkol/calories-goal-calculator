@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './ui/SignIn.dart';
 import './ui/SignUp.dart';
+import './ui/SignUp3.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue
       ),
       debugShowCheckedModeBanner: false,
-      home: new SignIn(),
+      home: new SignUp3(),
     );
   }
 }
