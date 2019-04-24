@@ -12,10 +12,6 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
 ];
 
 List<Widget> _tiles = const <Widget>[
-  // const Tile1(String target),
-  // const Tile1(Colors.white, Icons.wifi),
-  // const Tile2(Colors.white, Icons.panorama_wide_angle),
-  // const Tile3(Colors.white, Icons.map),
   const Tile1(Colors.white, Icons.send),
   const _Example01Tile(
       Text("Breakfast"), AssetImage('assets/images/icon/1.png')),

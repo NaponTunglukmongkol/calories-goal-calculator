@@ -4,9 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health_app/ui/FoodUI.dart';
 import 'package:health_app/ui/SignIn.dart';
-import 'package:connectivity/connectivity.dart';
-import 'package:progress_indicators/progress_indicators.dart';
-// import 'package:healthapp/ui/foodUI.dart';
 
 bool loading = false;
 String _showEmail = "can't load data";
