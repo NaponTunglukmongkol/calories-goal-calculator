@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:health_app/ui/list_food.dart';
+import './image_pick.dart';
 
 List<String> _databaseName = [
   'beef & veal_data',
@@ -82,6 +83,16 @@ class MenuBook extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Menu'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.camera),
+            onPressed: () {
+              print(Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CameraScreen()))
+                  .runtimeType);
+            },
+          )
+        ],
       ),
       body: Container(
         color: Colors.blueGrey,

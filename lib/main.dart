@@ -11,6 +11,7 @@ import 'package:health_app/ui/menu_group.dart';
 import 'package:health_app/ui/test_filter.dart';
 import './ui/SignIn.dart';
 import './Boloc/counterBloc.dart';
+import './ui/image_pick.dart';
 
 void main() => runApp(MyApp());
 
