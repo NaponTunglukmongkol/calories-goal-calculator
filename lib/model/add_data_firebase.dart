@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/ui/ButtonGradient.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:progress_indicators/progress_indicators.dart';
 
 List<String> fastfood = [
   'Angel Food Cake',
@@ -280,7 +277,7 @@ List<String> fastfood = [
   '415'
 ];
 
-String dataFood = 'cakes&pies_data';
+String dataFood = '55555555555';
 
 class AddDataFirebaseScreen extends StatefulWidget {
   @override
@@ -291,7 +288,6 @@ class AddDataFirebaseScreen extends StatefulWidget {
 
 class AddDataFirebaseScreenState extends State<AddDataFirebaseScreen> {
   Map dataRegis = new Map();
-  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -314,38 +310,26 @@ class AddDataFirebaseScreenState extends State<AddDataFirebaseScreen> {
                     ButtonBar(
                       alignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        FlatGradientButton(
-                            width: 120,
-                            child: Text(
-                              'Add Data',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            gradient: LinearGradient(
-                              colors: <Color>[
-                                Color(0xFF3366FF),
-                                Color(0xFF00CCFF)
-                              ],
-                            ),
-                            onPressed: () {
-                              print(fastfood.length / 3);
+                        RaisedButton(
+                          child: Text("data"),
+                          onPressed: () {
+                            print(fastfood.length / 3);
 
-                              for (int i = 0; i < fastfood.length; i += 3) {
-                                Firestore.instance.runTransaction(
-                                    (Transaction transaction) async {
-                                  DocumentReference reference = Firestore
-                                      .instance
-                                      .collection(dataFood)
-                                      .document();
-                                  await reference.setData({
-                                    "name": fastfood[i],
-                                    "unit": fastfood[i + 1],
-                                    "cal": fastfood[i + 2]
-                                  });
+                            for (int i = 0; i < fastfood.length; i += 3) {
+                              Firestore.instance.runTransaction(
+                                  (Transaction transaction) async {
+                                DocumentReference reference = Firestore.instance
+                                    .collection(dataFood)
+                                    .document();
+                                await reference.setData({
+                                  "name": fastfood[i],
+                                  "unit": fastfood[i + 1],
+                                  "cal": fastfood[i + 2]
                                 });
-                              }
-                            }),
+                              });
+                            }
+                          },
+                        )
                       ],
                     )
                   ],

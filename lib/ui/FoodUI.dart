@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:health_app/ui/detailFood.dart';
+import 'package:health_app/ui/menu_group.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
@@ -142,10 +144,18 @@ class _Example01Tile extends StatelessWidget {
     return new Card(
         color: Colors.white,
         child: new InkWell(
-            onTap: () {},
-            child: new Center(
-              child: new Column(
-                children: <Widget>[Image(image: icon, width: 80.0), text],
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MenuBook()));
+            },
+            child: Center(
+              child: new Container(
+                color: Colors.blueGrey,
+                // height: 96,
+                child: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[Image(image: icon, width: 80.0), text],
+                ),
               ),
             )));
   }

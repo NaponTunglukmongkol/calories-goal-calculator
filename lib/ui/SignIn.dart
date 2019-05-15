@@ -190,8 +190,9 @@ class LoginScreenState extends State<LoginScreen> {
             loading = false;
           });
           print("Please check your email to verified account");
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LoginScreen()));
+          print(user);
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
         }
       } else {
         setState(() {

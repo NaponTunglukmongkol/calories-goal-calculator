@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health_app/ui/FoodUI.dart';
 import 'package:health_app/ui/SignIn.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 bool loading = false;
 String _showEmail = "can't load data";
@@ -46,6 +47,26 @@ class HomeState extends State<Home> {
   String _showEmail = "";
   String _showUsername = "";
 
+  Widget _showCircularProgress() {
+    if (loading) {
+      return Container(
+          color: Color.fromARGB(200, 255, 255, 255),
+          child: Center(
+            child: JumpingDotsProgressIndicator(
+              fontSize: 80.0,
+              milliseconds: 100,
+              color: Colors.blueAccent,
+              numberOfDots: 4,
+              dotSpacing: 2,
+            ),
+          ));
+    }
+    return Container(
+      width: 0,
+      height: 0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -60,7 +81,7 @@ class HomeState extends State<Home> {
         }
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Text('Loading...');
+            return _showCircularProgress();
           default:
             // return Container(
             //   child: Column(
@@ -294,7 +315,10 @@ class Tile2 extends StatelessWidget {
       child: new InkWell(
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => FoodPage()));
+                context,
+                MaterialPageRoute(
+                    settings: RouteSettings(name: "routeName"),
+                    builder: (context) => FoodPage()));
           },
           child: Container(
             margin: const EdgeInsets.all(20.0),

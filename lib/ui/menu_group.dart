@@ -2,45 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:health_app/ui/list_food.dart';
 
-List<String> _databaseName = [
-  'beef & veal_data',
-  'cakes&pies_data',
-  'dishes_data',
-  'fast_food_data',
-  'fish&seafood_data',
-  'fruits_data',
-  'juices_data',
-  'meat_data',
-  'soup_data',
-  'vegetables_data'
-];
-
-List<String> _title = [
-  'Beef & Veal',
-  'Cakes & Pies',
-  'Dishes',
-  'Fastfood',
-  'Fish & Seafood',
-  'Fruits',
-  'Juices',
-  'Meat',
-  'Soup',
-  'Vegetables'
-];
-
-List<String> _pathLogo = [
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-  'assets/images/icon/2.png',
-];
-
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(2, 2),
   const StaggeredTile.count(2, 2),
@@ -56,24 +17,24 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
 List<Widget> _tiles = const <Widget>[
   const TileFood(Text("Beef & Veal"), AssetImage('assets/images/icon/2.png'),
       'beef & veal_data'),
+  const TileFood(Text("Cakes & Pies"), AssetImage('assets/images/icon/2.png'),
+      'cakes&pies_data'),
+  const TileFood(
+      Text("Dishes"), AssetImage('assets/images/icon/2.png'), 'dishes_data'),
+  const TileFood(Text("Fastfood"), AssetImage('assets/images/icon/2.png'),
+      'fast_food_data'),
   const TileFood(Text("Fish & Seafood"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
-  const TileFood(Text("Lunch"), AssetImage('assets/images/icon/2.png'),
-      'beef & veal_data'),
+      'fish&seafood_data'),
+  const TileFood(
+      Text("Fruits"), AssetImage('assets/images/icon/2.png'), 'fruits_data'),
+  const TileFood(
+      Text("Juices"), AssetImage('assets/images/icon/2.png'), 'juices_data'),
+  const TileFood(
+      Text("Meat"), AssetImage('assets/images/icon/2.png'), 'meat_data'),
+  const TileFood(
+      Text("Soup"), AssetImage('assets/images/icon/2.png'), 'soup_data'),
+  const TileFood(Text("Vegetables"), AssetImage('assets/images/icon/2.png'),
+      'vegetables_data'),
 ];
 
 class MenuBook extends StatelessWidget {
@@ -113,13 +74,17 @@ class TileFood extends StatelessWidget {
         color: Colors.white,
         child: new InkWell(
             onTap: () {
-              print(Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ListFood()))
-                  .runtimeType);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ListFood(databaseName)));
             },
-            child: new Center(
-              child: new Column(
-                children: <Widget>[Image(image: icon, width: 80.0), text],
+            child: Center(
+              child: new Container(
+                height: 96,
+                child: new Column(
+                  children: <Widget>[Image(image: icon, width: 80.0), text],
+                ),
               ),
             )));
   }

@@ -94,19 +94,6 @@ class RegisSecondState extends State<RegisSecond> {
     );
   }
 
-  // void alert_box(String title, String content) {
-  //   showDialog<String>(
-  //       context: context,
-  //       builder: (BuildContext context) => AlertDialog(
-  //             title: Text(title),
-  //             content: Text(content),
-  //             actions: <Widget>[
-  //               FlatButton(
-  //                   child: Text("Ok"), onPressed: () => Navigator.pop(context))
-  //             ],
-  //           ));
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,82 +281,3 @@ class RegisSecondState extends State<RegisSecond> {
     ));
   }
 }
-
-// import 'package:flutter/material.dart';
-
-// class MyApp extends StatefulWidget {
-//   @override
-//   _MyAppState createState() => new _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-//   int _radioValue1 = 0;
-
-//   void _handleRadioValueChange1(int value) {
-//     setState(() {
-//       _radioValue1 = value;
-//       switch (_radioValue1) {
-//         case 0:
-//           print(1);
-//           break;
-//         case 1:
-//           print(2);
-//           break;
-//       }
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return new MaterialApp(
-//         home: new Scaffold(
-//             appBar: AppBar(
-//               title: new Text('Kids Quiz App'),
-//               centerTitle: true,
-//               backgroundColor: Colors.blue,
-//             ),
-//             body: new Container(
-//                 padding: EdgeInsets.all(8.0),
-//                 child: new Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: <Widget>[
-//                       new Row(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: <Widget>[
-//                           new Radio(
-//                             value: 0,
-//                             groupValue: _radioValue1,
-//                             onChanged: _handleRadioValueChange1,
-//                           ),
-//                           new Text(
-//                             'Carnivore',
-//                             style: new TextStyle(fontSize: 16.0),
-//                           ),
-//                           new Radio(
-//                             value: 1,
-//                             groupValue: _radioValue1,
-//                             onChanged: _handleRadioValueChange1,
-//                           ),
-//                           new Text(
-//                             'Herbivore',
-//                             style: new TextStyle(
-//                               fontSize: 16.0,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ]))));
-//   }
-
-// void validateAnswers() {
-//   if (_radioValue1 == -1 && _radioValue2 == -1 &&
-//       _radioValue3 == -1 && _radioValue4 == -1 &&
-//       _radioValue5 == -1) {
-//     Fluttertoast.showToast(msg: 'Please select atleast one answer',
-//         toastLength: Toast.LENGTH_SHORT);
-//   } else {
-//     Fluttertoast.showToast(
-//         msg: 'Your total score is: $correctScore out of 5',
-//         toastLength: Toast.LENGTH_LONG);
-//   }
-// }

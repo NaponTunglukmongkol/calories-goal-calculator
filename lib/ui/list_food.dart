@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_app/ui/FoodUI.dart';
+import 'package:health_app/ui/Home.dart';
+import 'package:health_app/ui/SignIn.dart';
+import 'package:health_app/ui/detailFood.dart';
+import 'package:progress_indicators/progress_indicators.dart';
+import '../Boloc/counterBloc.dart';
 
 class ListFood extends StatefulWidget {
+  const ListFood(this.databaseName);
+  final String databaseName;
   @override
   State<StatefulWidget> createState() {
-    return ListFoodState();
+    return ListFoodState(databaseName);
   }
 }
 
 class ListFoodState extends State<ListFood> {
+  final CounterBloc _counterBloc = CounterBloc();
+  ListFoodState(this.databaseName) {
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _controller.text;
+        });
+      }
+    });
+  }
+  // ListFoodState(this.databaseName);
+  final String databaseName;
   List<Map<String, String>> _listFood = [];
   List<Map<String, String>> _searchResult = [];
   final TextEditingController _controller = new TextEditingController();
@@ -25,28 +52,23 @@ class ListFoodState extends State<ListFood> {
   );
   String _searchText = "";
 
-  ListFoodState() {
-    _controller.addListener(() {
-      if (_controller.text.isEmpty) {
-        setState(() {
-          _isSearching = false;
-          _searchText = "";
-        });
-      } else {
-        setState(() {
-          _isSearching = true;
-          _searchText = _controller.text;
-        });
-      }
-    });
-  }
-
   @override
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('soup_data').snapshots(),
+      stream: Firestore.instance.collection(databaseName).snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData)
+          return Container(
+              color: Color.fromARGB(200, 255, 255, 255),
+              child: Center(
+                child: JumpingDotsProgressIndicator(
+                  fontSize: 80.0,
+                  milliseconds: 100,
+                  color: Colors.blueAccent,
+                  numberOfDots: 4,
+                  dotSpacing: 2,
+                ),
+              ));
         return _buildList(context, snapshot.data.documents);
       },
     );
@@ -78,26 +100,48 @@ class ListFoodState extends State<ListFood> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               new Flexible(
-                  child:
-                      _searchResult.length != 0 || _controller.text.isNotEmpty
-                          ? new ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _searchResult.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return new ListTile(
-                                  title: new Text(_searchResult[index]['name']),
-                                );
+                  child: _searchResult.length != 0 ||
+                          _controller.text.isNotEmpty
+                      ? new ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _searchResult.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new ListTile(
+                              title: new Text(_searchResult[index]['name']),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BlocProvider<CounterBloc>(
+                                              bloc: _counterBloc,
+                                              child:
+                                                  CounterPage(_listFood[index]),
+                                            )));
                               },
-                            )
-                          : new ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _listFood.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return new ListTile(
-                                  title: new Text(_listFood[index]['name']),
-                                );
+                            );
+                          },
+                        )
+                      : new ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _listFood.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new ListTile(
+                              title: new Text(_listFood[index]['name']),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BlocProvider<CounterBloc>(
+                                              bloc: _counterBloc,
+                                              child:
+                                                  CounterPage(_listFood[index]),
+                                            )));
                               },
-                            ))
+                            );
+                          },
+                        ))
             ],
           ),
         ));
