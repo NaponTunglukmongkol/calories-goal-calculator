@@ -47,7 +47,7 @@ class ListFoodState extends State<ListFood> {
     color: Colors.white,
   );
   Widget appBarTitle = new Text(
-    "Munu List",
+    "Menu List",
     style: new TextStyle(color: Colors.white),
   );
   String _searchText = "";
