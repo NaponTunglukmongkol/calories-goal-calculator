@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health_app/ui/FoodUI.dart';
 import 'package:health_app/ui/SignIn.dart';
+import 'package:health_app/ui/introscreen.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
 bool loading = false;
@@ -148,6 +149,13 @@ class HomeState extends State<Home> {
                     ListTile(
                       title: Text("Setting"),
                       onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text("Features"),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Intro()));
+                      },
                     ),
                     ListTile(
                       title: Text("SignOut"),
