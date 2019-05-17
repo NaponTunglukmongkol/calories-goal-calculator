@@ -48,9 +48,9 @@ class MenuBook extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.camera),
             onPressed: () {
-              print(Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CameraScreen()))
-                  .runtimeType);
+              // print(Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => CameraScreen()))
+              //     .runtimeType);
             },
           )
         ],

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health_app/ui/FoodUI.dart';
 import 'package:health_app/ui/SignIn.dart';
+import 'package:health_app/ui/editProfileUI.dart';
 import 'package:health_app/ui/introscreen.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
@@ -77,6 +78,12 @@ class HomeState extends State<Home> {
           .snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        print("AAAAAAAAAAAAAAAA");
+        Stream<DocumentSnapshot> snapshot555 = Firestore.instance
+            .collection('users')
+            .document('${user.uid}')
+            .snapshots();
+        print(snapshot.runtimeType);
         if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');
         }
@@ -144,7 +151,12 @@ class HomeState extends State<Home> {
                     ),
                     ListTile(
                       title: Text("Edit Profile"),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CameraScreen()));
+                      },
                     ),
                     ListTile(
                       title: Text("Setting"),
