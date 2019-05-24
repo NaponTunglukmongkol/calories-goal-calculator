@@ -4,6 +4,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:health_app/ui/detailFood.dart';
 import 'package:health_app/ui/menu_group.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:progress_indicators/progress_indicators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(6, 4),
@@ -13,21 +15,27 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(6, 3),
 ];
 
-List<Widget> _tiles = const <Widget>[
-  const Tile1(Colors.white, Icons.send),
-  const _Example01Tile(
-      Text("Breakfast"), AssetImage('assets/images/icon/1.png')),
-  const _Example01Tile(Text("Lunch"), AssetImage('assets/images/icon/2.png')),
-  const _Example01Tile(Text("Dinner"), AssetImage('assets/images/icon/3.png')),
-  const _Example01Tile(Text("fefef"), AssetImage('assets/images/icon/1.png')),
-];
+bool loading = false;
 
 class FoodPage extends StatefulWidget {
+  String user;
+  FoodPage(this.user);
   @override
-  FoodPageState createState() => FoodPageState();
+  FoodPageState createState() => FoodPageState(user);
 }
 
 class FoodPageState extends State<FoodPage> {
+  String user;
+  FoodPageState(this.user);
+  // List<Widget> _tiles = <Widget>[
+  //   const Tile1(Colors.white, Icons.send),
+  //   const _Example01Tile(
+  //       Text("Breakfast"), AssetImage('assets/images/icon/1.png')),
+  //   const _Example01Tile(Text("Lunch"), AssetImage('assets/images/icon/2.png')),
+  //   const _Example01Tile(
+  //       Text("Dinner"), AssetImage('assets/images/icon/3.png')),
+  //   Tile_all_food(user),
+  // ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +65,16 @@ class FoodPageState extends State<FoodPage> {
               child: new StaggeredGridView.count(
                 crossAxisCount: 6,
                 staggeredTiles: _staggeredTiles,
-                children: _tiles,
+                children: <Widget>[
+                  const Tile1(Colors.white, Icons.send),
+                  const _Example01Tile(Text("Breakfast"),
+                      AssetImage('assets/images/icon/1.png')),
+                  const _Example01Tile(
+                      Text("Lunch"), AssetImage('assets/images/icon/2.png')),
+                  const _Example01Tile(
+                      Text("Dinner"), AssetImage('assets/images/icon/3.png')),
+                  Tile_all_food(user),
+                ],
                 mainAxisSpacing: 0.0,
                 crossAxisSpacing: 0.0,
                 padding: const EdgeInsets.all(5.0),
@@ -158,5 +175,59 @@ class _Example01Tile extends StatelessWidget {
                 ),
               ),
             )));
+  }
+}
+
+class Tile_all_food extends StatelessWidget {
+  String user;
+  Tile_all_food(this.user);
+  List<Map<String, String>> _listFood = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection('users')
+          .document(user)
+          .collection('all_food_add')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        return _buildList(context, snapshot.data.documents);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    if (_listFood.length < snapshot.length) {
+      for (int i = 0; i < snapshot.length; i++) {
+        _listFood.add({
+          "name": snapshot[i].data["name"].toString(),
+          // "unit": snapshot[i].data["unit"].toString(),
+          // "cal": snapshot[i].data["cal"].toString()
+        });
+      }
+    }
+
+    return Card(
+        color: Colors.white,
+        child: new InkWell(
+            // onTap: () {
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => MenuBook()));
+            // },
+            child: Center(
+          child: new Container(
+            color: Colors.blueGrey,
+            // height: 96,
+            child: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[Text(snapshot[0].data["name"].toString())],
+            ),
+          ),
+        )));
   }
 }

@@ -48,10 +48,7 @@ class IntroState extends State<Intro> {
   }
 
   void onDonePress() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+    Navigator.pop(context);
   }
 
   @override

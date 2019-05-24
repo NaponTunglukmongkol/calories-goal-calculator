@@ -1,16 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_app/Boloc/counter_event.dart';
 import 'package:health_app/ui/FoodUI.dart';
+import 'package:health_app/ui/Home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Boloc/counterBloc.dart';
 
 import 'package:path/path.dart';
 
 class CounterPage extends StatelessWidget {
+  String user = '';
   Map<String, String> _listFood;
   CounterPage(this._listFood);
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Future<String> getLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    this.user = prefs.get('user') ?? '0';
+  }
+
   @override
   Widget build(BuildContext context) {
+    getLogin();
     final CounterBloc _counterBlog = BlocProvider.of<CounterBloc>(context);
     return Scaffold(
       appBar: AppBar(title: Text("counter")),
@@ -70,6 +82,24 @@ class CounterPage extends StatelessWidget {
                 child: RaisedButton(
                   child: Text("data"),
                   onPressed: () {
+                    Firestore.instance
+                        .runTransaction((Transaction transaction) async {
+                      DocumentReference reference = Firestore.instance
+                          .collection('users')
+                          .document('$user')
+                          .collection('all_food_add')
+                          .document();
+                      await reference.setData({
+                        "name": _listFood['name'],
+                        "unit": "$count " + _listFood['unit'],
+                        "cal": (int.parse(_listFood['cal']) * count),
+                        'hours': DateTime.now().hour,
+                        'minute': DateTime.now().minute,
+                        'day': DateTime.now().day,
+                        'month': DateTime.now().month,
+                        'year': DateTime.now().year,
+                      });
+                    });
                     Navigator.of(context)
                         .popUntil(ModalRoute.withName("routeName"));
                   },

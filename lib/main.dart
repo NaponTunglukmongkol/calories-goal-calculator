@@ -9,6 +9,7 @@ import 'package:health_app/ui/list_food.dart';
 import 'package:health_app/ui/map_screen.dart';
 import 'package:health_app/ui/menu_group.dart';
 import 'package:health_app/ui/test_filter.dart';
+import 'package:health_app/ui/wait.dart';
 import './ui/SignIn.dart';
 import './Boloc/counterBloc.dart';
 import './ui/image_pick.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Carolies-Count-App',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'SF-Pro-Text8'),
       debugShowCheckedModeBanner: false,
-      home: new LoginScreen(),
+      home: new Wait(),
     );
   }
 }

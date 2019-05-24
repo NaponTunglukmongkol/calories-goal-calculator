@@ -7,6 +7,7 @@ import 'package:health_app/ui/SignIn.dart';
 import 'package:health_app/ui/editProfileUI.dart';
 import 'package:health_app/ui/introscreen.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool loading = false;
 String _showEmail = "can't load data";
@@ -22,27 +23,16 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(2, 2),
 ];
 
-List<Widget> _tiles = const <Widget>[
-  // const Tile1(String target),
-  const Tile1(Colors.white, Icons.wifi),
-  const Tile2(Colors.white, Icons.panorama_wide_angle),
-  const Tile3(Colors.white, Icons.map),
-  const _Example01Tile(Colors.white, Icons.send),
-  const _Example01Tile(Colors.white, Icons.airline_seat_flat),
-  const _Example01Tile(Colors.white, Icons.bluetooth),
-  const _Example01Tile(Colors.white, Icons.bluetooth),
-];
-
 class Home extends StatefulWidget {
-  final FirebaseUser user;
+  final String user;
 
-  const Home({Key key, this.user}) : super(key: key);
+  Home(this.user);
   @override
   HomeState createState() => HomeState(user);
 }
 
 class HomeState extends State<Home> {
-  FirebaseUser user;
+  String user;
   HomeState(this.user);
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -72,18 +62,14 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance
-          .collection('users')
-          .document('${user.uid}')
-          .snapshots(),
+      stream:
+          Firestore.instance.collection('users').document('$user').snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        print("AAAAAAAAAAAAAAAA");
-        Stream<DocumentSnapshot> snapshot555 = Firestore.instance
-            .collection('users')
-            .document('${user.uid}')
-            .snapshots();
-        print(snapshot.runtimeType);
+        // Stream<DocumentSnapshot> snapshot555 = Firestore.instance
+        //     .collection('users')
+        //     .document('${user.uid}')
+        //     .snapshots();
         if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');
         }
@@ -119,7 +105,17 @@ class HomeState extends State<Home> {
                       child: new StaggeredGridView.count(
                         crossAxisCount: 4,
                         staggeredTiles: _staggeredTiles,
-                        children: _tiles,
+                        children: <Widget>[
+                          // const Tile1(String target),
+                          const Tile1(Colors.white, Icons.wifi),
+                          Tile2(user),
+                          const Tile3(Colors.white, Icons.map),
+                          const _Example01Tile(Colors.white, Icons.send),
+                          const _Example01Tile(
+                              Colors.white, Icons.airline_seat_flat),
+                          const _Example01Tile(Colors.white, Icons.bluetooth),
+                          const _Example01Tile(Colors.white, Icons.bluetooth),
+                        ],
                         mainAxisSpacing: 0.0,
                         crossAxisSpacing: 0.0,
                         padding: const EdgeInsets.all(5.0),
@@ -151,11 +147,23 @@ class HomeState extends State<Home> {
                     ),
                     ListTile(
                       title: Text("Edit Profile"),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CameraScreen()));
+                      onTap: () async {
+                        NavigatorState navigator = Navigator.of(context);
+                        Navigator.of(context).pop(); // Added
+                        Route route = ModalRoute.of(context);
+                        while (navigator.canPop())
+                          navigator.removeRouteBelow(route);
+                        await navigator.push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => CameraScreen(),
+                          ),
+                        );
+                        // Removed setState(), the page will be rebuilt automatically
+                        // _instructions = '<- Click';
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => CameraScreen()));
                       },
                     ),
                     ListTile(
@@ -164,9 +172,19 @@ class HomeState extends State<Home> {
                     ),
                     ListTile(
                       title: Text("Features"),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Intro()));
+                      onTap: () async {
+                        NavigatorState navigator = Navigator.of(context);
+                        Navigator.of(context).pop(); // Added
+                        Route route = ModalRoute.of(context);
+                        while (navigator.canPop())
+                          navigator.removeRouteBelow(route);
+                        await navigator.push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => Intro(),
+                          ),
+                        );
+                        // Navigator.push(context,
+                        //     MaterialPageRoute(builder: (context) => Intro()));
                       },
                     ),
                     ListTile(
@@ -242,6 +260,8 @@ class HomeState extends State<Home> {
   }
 
   _logOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('user');
     await auth.signOut().then((_) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -324,9 +344,10 @@ class Tile1 extends StatelessWidget {
 }
 
 class Tile2 extends StatelessWidget {
-  const Tile2(this.backgroundColor, this.iconData);
-  final Color backgroundColor;
-  final IconData iconData;
+  String user;
+  Tile2(this.user);
+  // final Color backgroundColor;
+  // final IconData iconData;
 
   @override
   Widget build(BuildContext context) {
@@ -338,7 +359,7 @@ class Tile2 extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     settings: RouteSettings(name: "routeName"),
-                    builder: (context) => FoodPage()));
+                    builder: (context) => FoodPage(user)));
           },
           child: Container(
             margin: const EdgeInsets.all(20.0),

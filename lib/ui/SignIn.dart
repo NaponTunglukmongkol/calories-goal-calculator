@@ -135,6 +135,7 @@ import 'package:health_app/ui/ButtonGradient.dart';
 import 'package:health_app/ui/Home.dart';
 import 'package:health_app/ui/SignUp1.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -171,36 +172,36 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getUser().then((user) {
-      setState(() {
-        loading = true;
-      });
-      if (user != null) {
-        if (user.isEmailVerified) {
-          setState(() {
-            loading = false;
-          });
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Home(user: user)));
-        } else {
-          setState(() {
-            loading = false;
-          });
-          print("Please check your email to verified account");
-          print(user);
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
-        }
-      } else {
-        setState(() {
-          loading = false;
-        });
-      }
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getUser().then((user) {
+  //     setState(() {
+  //       loading = true;
+  //     });
+  //     if (user != null) {
+  //       if (user.isEmailVerified) {
+  //         setState(() {
+  //           loading = false;
+  //         });
+  //         Navigator.push(
+  //             context, MaterialPageRoute(builder: (context) => Home(user)));
+  //       } else {
+  //         setState(() {
+  //           loading = false;
+  //         });
+  //         print("Please check your email to verified account");
+  //         print(user);
+  //         // Navigator.push(
+  //         //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  //       }
+  //     } else {
+  //       setState(() {
+  //         loading = false;
+  //       });
+  //     }
+  //   });
+  // }
 
   Future<FirebaseUser> getUser() async {
     return await auth.currentUser();
@@ -260,13 +261,16 @@ class LoginScreenState extends State<LoginScreen> {
                             email: email.text,
                             password: password.text,
                           )
-                              .then((FirebaseUser user) {
+                              .then((FirebaseUser user) async {
                             if (user.isEmailVerified) {
-                              print("go to home screen");
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString('user', '${user.uid}');
+                              String userok = prefs.get('user');
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Home(user: user)));
+                                      builder: (context) => Home(userok)));
                             } else {
                               print(
                                   "Please check your email to verified account");
