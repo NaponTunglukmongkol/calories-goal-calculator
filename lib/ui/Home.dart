@@ -77,13 +77,6 @@ class HomeState extends State<Home> {
           case ConnectionState.waiting:
             return _showCircularProgress();
           default:
-            // return Container(
-            //   child: Column(
-            //     children: <Widget>[
-            //       Text(snapshot.data['name']),
-            //     ],
-            //   ),
-            // );
             return Scaffold(
               appBar: AppBar(
                 title: Text("data"),
