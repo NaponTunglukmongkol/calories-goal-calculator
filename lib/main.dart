@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_app/Boloc/counter_event.dart';
-import 'package:health_app/model/add_data_firebase.dart';
-import 'package:health_app/ui/FoodUI.dart';
-import 'package:health_app/ui/Home.dart';
-import 'package:health_app/ui/SignUp.dart';
-import 'package:health_app/ui/list_food.dart';
-import 'package:health_app/ui/map_screen.dart';
-import 'package:health_app/ui/menu_group.dart';
-import 'package:health_app/ui/test_filter.dart';
+import 'package:health_app/ui/bar_test.dart';
 import 'package:health_app/ui/wait.dart';
-import './ui/SignIn.dart';
-import './Boloc/counterBloc.dart';
-import './ui/image_pick.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,7 +11,8 @@ class MyApp extends StatelessWidget {
       title: 'Carolies-Count-App',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'SF-Pro-Text8'),
       debugShowCheckedModeBanner: false,
-      home: new Wait(),
+      // home: MyHomePage(),
+      home: Wait(),
     );
   }
 }

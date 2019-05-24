@@ -100,8 +100,12 @@ class CounterPage extends StatelessWidget {
                         'year': DateTime.now().year,
                       });
                     });
-                    Navigator.of(context)
-                        .popUntil(ModalRoute.withName("routeName"));
+                    // Navigator.of(context)
+                    //     .popUntil(ModalRoute.withName("routeName"));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FoodPage(user)));
                   },
                 ),
               )
