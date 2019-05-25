@@ -21,19 +21,6 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
 bool loading = false;
 List<Map<String, String>> _listFood = [];
 
-List<Widget> listFoodToday = [
-  Container(
-    color: Colors.blueAccent,
-    child: ListTile(
-      title: Text(
-        "Eaten in Today",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      trailing: Text("Time"),
-    ),
-  )
-];
-
 class FoodPage extends StatefulWidget {
   String user;
   FoodPage(this.user);
@@ -47,7 +34,7 @@ class FoodPageState extends State<FoodPage> {
 
   @override
   Widget build(BuildContext context) {
-    listFoodToday.clear();
+    // listFoodToday.clear();
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection('users')
@@ -59,12 +46,26 @@ class FoodPageState extends State<FoodPage> {
           return Center(
             child: CircularProgressIndicator(),
           );
+
         return _buildList(context, snapshot.data.documents);
       },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    List<Widget> listFoodToday = [
+      Container(
+        color: Colors.blueAccent,
+        child: ListTile(
+          title: Text(
+            "Eaten in Today",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: Text("Time"),
+        ),
+      )
+    ];
+    _listFood.clear();
     if (_listFood.length < snapshot.length) {
       for (int i = 0; i < snapshot.length; i++) {
         _listFood.add({
@@ -91,6 +92,8 @@ class FoodPageState extends State<FoodPage> {
         }
       }
     }
+    print('LIST FOOD LENGTH = ' + _listFood.length.toString());
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -126,7 +129,7 @@ class FoodPageState extends State<FoodPage> {
                       Text("Lunch"), AssetImage('assets/images/icon/2.png')),
                   const _Example01Tile(
                       Text("Dinner"), AssetImage('assets/images/icon/3.png')),
-                  Tile_all_food(_listFood),
+                  Tile_all_food(listFoodToday),
                 ],
                 mainAxisSpacing: 0.0,
                 crossAxisSpacing: 0.0,
@@ -162,7 +165,7 @@ class Tile1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(_listFood);
+    // print(_listFood);
     return new Card(
       color: Colors.white,
       child: new InkWell(
@@ -250,12 +253,12 @@ class _Example01Tile extends StatelessWidget {
 }
 
 class Tile_all_food extends StatelessWidget {
-  Tile_all_food(this._listFood);
-  List<Map<String, String>> _listFood;
+  Tile_all_food(this._listFoodToday);
+  List<Widget> _listFoodToday;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    print(_listFoodToday.toString() + '2');
     return Card(
         color: Colors.white,
         child: new InkWell(
@@ -264,7 +267,7 @@ class Tile_all_food extends StatelessWidget {
               //     context, MaterialPageRoute(builder: (context) => MenuBook()));
             },
             child: Column(
-              children: listFoodToday,
+              children: _listFoodToday,
             )));
   }
 }
