@@ -48,6 +48,7 @@ class RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(dataRegis);
     return Scaffold(
         body: Stack(
       children: <Widget>[
@@ -233,6 +234,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                                     "age": dataRegis['age'],
                                     "height": dataRegis['height'],
                                     "weight": dataRegis['weight'],
+                                    'bmr': dataRegis['bmr']
                                   });
                                 });
                                 user.sendEmailVerification().then((user) {

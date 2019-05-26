@@ -35,6 +35,7 @@ class RegisSecondState extends State<RegisSecond> {
 
   String dob = "";
   int age;
+  double bmr;
 
   bool _showTitleActions = true;
   void _handleRadioValueChange1(String value) {
@@ -82,7 +83,6 @@ class RegisSecondState extends State<RegisSecond> {
           }
         }
 
-        print(dob);
         txt.text = _date.toString() +
             " - " +
             _month.toString() +
@@ -90,6 +90,7 @@ class RegisSecondState extends State<RegisSecond> {
             _year.toString();
         age = ((DateTime.now().difference(DateTime.parse(dob)).inDays) / 365)
             .round();
+        print(age);
       },
     );
   }
@@ -257,11 +258,28 @@ class RegisSecondState extends State<RegisSecond> {
                                     "Try again to input your Height again",
                                     context);
                               } else {
+                                if (_gen.toString() == 'Male') {
+                                  bmr = 10 *
+                                          double.parse(weightController.text) +
+                                      6.25 *
+                                          double.parse(heightController.text) -
+                                      5 * age +
+                                      5;
+                                } else {
+                                  bmr = 10 *
+                                          double.parse(weightController.text) +
+                                      6.25 *
+                                          double.parse(heightController.text) -
+                                      5 * age -
+                                      161;
+                                }
+                                print(bmr.toString());
                                 dataRegis['dob'] = dob;
                                 dataRegis['age'] = age;
                                 dataRegis['gen'] = _gen;
                                 dataRegis['height'] = heightController.text;
                                 dataRegis['weight'] = weightController.text;
+                                dataRegis['bmr'] = bmr.toString();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

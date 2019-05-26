@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/ui/bar_test.dart';
+import 'package:health_app/ui/map_screen.dart';
 import 'package:health_app/ui/wait.dart';
 
 void main() => runApp(MyApp());
@@ -11,7 +12,6 @@ class MyApp extends StatelessWidget {
       title: 'Carolies-Count-App',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'SF-Pro-Text8'),
       debugShowCheckedModeBanner: false,
-      // home: MyHomePage(),
       home: Wait(),
     );
   }

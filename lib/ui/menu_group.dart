@@ -16,25 +16,25 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(2, 2),
 ];
 List<Widget> _tiles = const <Widget>[
-  const TileFood(Text("Beef & Veal"), AssetImage('assets/images/icon/2.png'),
+  const TileFood(Text("Beef & Veal"), AssetImage('assets/images/icon/chop.png'),
       'beef & veal_data'),
-  const TileFood(Text("Cakes & Pies"), AssetImage('assets/images/icon/2.png'),
-      'cakes&pies_data'),
-  const TileFood(
-      Text("Dishes"), AssetImage('assets/images/icon/2.png'), 'dishes_data'),
-  const TileFood(Text("Fastfood"), AssetImage('assets/images/icon/2.png'),
+  const TileFood(Text("Cakes & Pies"),
+      AssetImage('assets/images/icon/piece-of-cake.png'), 'cakes&pies_data'),
+  const TileFood(Text("Dishes"),
+      AssetImage('assets/images/icon/fried-rice.png'), 'dishes_data'),
+  const TileFood(Text("Fastfood"), AssetImage('assets/images/icon/fries.png'),
       'fast_food_data'),
-  const TileFood(Text("Fish & Seafood"), AssetImage('assets/images/icon/2.png'),
-      'fish&seafood_data'),
+  const TileFood(Text("Fish & Seafood"),
+      AssetImage('assets/images/icon/sea.png'), 'fish&seafood_data'),
+  const TileFood(Text("Fruits"), AssetImage('assets/images/icon/apple.png'),
+      'fruits_data'),
+  const TileFood(Text("Juices"),
+      AssetImage('assets/images/icon/orange-juice.png'), 'juices_data'),
   const TileFood(
-      Text("Fruits"), AssetImage('assets/images/icon/2.png'), 'fruits_data'),
+      Text("Meat"), AssetImage('assets/images/icon/steak.png'), 'meat_data'),
   const TileFood(
-      Text("Juices"), AssetImage('assets/images/icon/2.png'), 'juices_data'),
-  const TileFood(
-      Text("Meat"), AssetImage('assets/images/icon/2.png'), 'meat_data'),
-  const TileFood(
-      Text("Soup"), AssetImage('assets/images/icon/2.png'), 'soup_data'),
-  const TileFood(Text("Vegetables"), AssetImage('assets/images/icon/2.png'),
+      Text("Soup"), AssetImage('assets/images/icon/soup.png'), 'soup_data'),
+  const TileFood(Text("Vegetables"), AssetImage('assets/images/icon/salad.png'),
       'vegetables_data'),
 ];
 
@@ -91,12 +91,12 @@ class TileFood extends StatelessWidget {
                       builder: (context) => ListFood(databaseName)));
             },
             child: Center(
-              child: new Container(
-                height: 96,
-                child: new Column(
-                  children: <Widget>[Image(image: icon, width: 80.0), text],
-                ),
-              ),
-            )));
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                  new Container(
+                      height: 76, child: Image(image: icon, width: 60.0)),
+                  text,
+                ]))));
   }
 }

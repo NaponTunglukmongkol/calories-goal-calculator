@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,10 +16,6 @@ String _showUsername = "can't load data";
 
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(4, 2),
-  const StaggeredTile.count(2, 2),
-  const StaggeredTile.count(2, 2),
-  const StaggeredTile.count(2, 2),
-  const StaggeredTile.count(2, 2),
   const StaggeredTile.count(2, 2),
   const StaggeredTile.count(2, 2),
 ];
@@ -101,13 +98,8 @@ class HomeState extends State<Home> {
                         children: <Widget>[
                           // const Tile1(String target),
                           const Tile1(Colors.white, Icons.wifi),
-                          Tile2(user),
+                          Tile2(user, snapshot.data['bmr']),
                           const Tile3(Colors.white, Icons.map),
-                          const _Example01Tile(Colors.white, Icons.send),
-                          const _Example01Tile(
-                              Colors.white, Icons.airline_seat_flat),
-                          const _Example01Tile(Colors.white, Icons.bluetooth),
-                          const _Example01Tile(Colors.white, Icons.bluetooth),
                         ],
                         mainAxisSpacing: 0.0,
                         crossAxisSpacing: 0.0,
@@ -127,11 +119,13 @@ class HomeState extends State<Home> {
                       accountName: Text(snapshot.data['username']),
                       accountEmail: Text(snapshot.data['email']),
                       currentAccountPicture: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(snapshot.data['urlProfilea']),
                         backgroundColor: Colors.white,
-                        child: Text(
-                          "A",
-                          style: TextStyle(fontSize: 40.0),
-                        ),
+                        // child: Text(
+                        //   "A",
+                        //   style: TextStyle(fontSize: 40.0),
+                        // ),
                       ),
                     ),
                     ListTile(
@@ -148,7 +142,8 @@ class HomeState extends State<Home> {
                           navigator.removeRouteBelow(route);
                         await navigator.push(
                           MaterialPageRoute(
-                            builder: (BuildContext context) => CameraScreen(),
+                            builder: (BuildContext context) =>
+                                CameraScreen(user),
                           ),
                         );
                         // Removed setState(), the page will be rebuilt automatically
@@ -185,7 +180,13 @@ class HomeState extends State<Home> {
                       onTap: () {
                         _logOut();
                       },
-                    )
+                    ),
+                    // ListTile(
+                    //   title: Text("Show image"),
+                    //   onTap: () {
+                    //     _loadProfileImage();
+                    //   },
+                    // )
                   ],
                 ),
               ),
@@ -259,6 +260,12 @@ class HomeState extends State<Home> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
     });
+  }
+
+  _loadProfileImage() async {
+    final ref = FirebaseStorage.instance.ref().child('$user').child('profile');
+    var url = await ref.getDownloadURL();
+    print(url);
   }
 }
 
@@ -337,8 +344,8 @@ class Tile1 extends StatelessWidget {
 }
 
 class Tile2 extends StatelessWidget {
-  String user;
-  Tile2(this.user);
+  String user, bmr;
+  Tile2(this.user, this.bmr);
   // final Color backgroundColor;
   // final IconData iconData;
 
@@ -352,7 +359,7 @@ class Tile2 extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     settings: RouteSettings(name: "routeName"),
-                    builder: (context) => FoodPage(user)));
+                    builder: (context) => FoodPage(user, bmr)));
           },
           child: Container(
             margin: const EdgeInsets.all(20.0),

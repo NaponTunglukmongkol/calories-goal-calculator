@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -8,10 +9,12 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CameraScreen extends StatefulWidget {
+  String user;
+  CameraScreen(this.user);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return CameraScreenState();
+    return CameraScreenState(user);
   }
 }
 
@@ -63,6 +66,8 @@ class CameraScreen extends StatefulWidget {
 // }
 
 class CameraScreenState extends State {
+  String user;
+  CameraScreenState(this.user);
   File sampleImage;
 
   Future getImage() async {
@@ -126,14 +131,29 @@ class CameraScreenState extends State {
             child: Text('Upload'),
             textColor: Colors.white,
             color: Colors.blue,
-            onPressed: () {
+            onPressed: () async {
               final StorageReference firebaseStorageRef = FirebaseStorage
                   .instance
                   .ref()
-                  .child('profileImage')
-                  .child('dfdf');
+                  .child('$user')
+                  .child('profile');
               final StorageUploadTask task =
                   firebaseStorageRef.putFile(sampleImage);
+
+              // final ref = FirebaseStorage.instance
+              //     .ref()
+              //     .child('$user')
+              //     .child('profile');
+              var url = await firebaseStorageRef.getDownloadURL();
+              print(url);
+              Firestore.instance
+                  .runTransaction((Transaction transaction) async {
+                DocumentReference reference =
+                    Firestore.instance.collection('users').document('$user');
+                await reference.updateData({
+                  "urlProfilea": url,
+                });
+              });
             },
           )
         ],

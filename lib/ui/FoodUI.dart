@@ -19,18 +19,22 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
 ];
 
 bool loading = false;
-List<Map<String, String>> _listFood = [];
+List<Map<String, dynamic>> _listFood = [];
+List<QuarterSales> mockedData = [];
+
+List<double> last7day = [0, 0, 0, 0, 0, 0, 0];
+List<int> day_in_7 = [0, 0, 0, 0, 0, 0, 0];
 
 class FoodPage extends StatefulWidget {
-  String user;
-  FoodPage(this.user);
+  String user, bmr;
+  FoodPage(this.user, this.bmr);
   @override
-  FoodPageState createState() => FoodPageState(user);
+  FoodPageState createState() => FoodPageState(user, bmr);
 }
 
 class FoodPageState extends State<FoodPage> {
-  String user;
-  FoodPageState(this.user);
+  String user, bmr;
+  FoodPageState(this.user, this.bmr);
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +70,8 @@ class FoodPageState extends State<FoodPage> {
       )
     ];
     _listFood.clear();
+    day_in_7 = [0, 0, 0, 0, 0, 0, 0];
+    last7day = [0, 0, 0, 0, 0, 0, 0];
     if (_listFood.length < snapshot.length) {
       for (int i = 0; i < snapshot.length; i++) {
         _listFood.add({
@@ -90,9 +96,29 @@ class FoodPageState extends State<FoodPage> {
                 snapshot[i].data["minute"].toString()),
           ));
         }
+
+        for (int x = 0; x < 7; x++) {
+          DateTime date = DateTime.now();
+          day_in_7[x] = date.subtract(Duration(days: x)).day;
+          if (date.subtract(Duration(days: x)).day == snapshot[i].data["day"]) {
+            print(snapshot[i].data["name"].toString() +
+                ' ' +
+                snapshot[i].data["day"].toString() +
+                ' ' +
+                snapshot[i].data["cal"].toString());
+            last7day[x] += double.parse(snapshot[i].data["cal"].toString());
+          }
+        }
+      }
+
+      day_in_7 = day_in_7.reversed.toList();
+      last7day = last7day.reversed.toList();
+      print(day_in_7);
+      print(last7day);
+      for (int d = 0; d < day_in_7.length; d++) {
+        mockedData.add(QuarterSales(day_in_7[d].toString(), last7day[d]));
       }
     }
-    print('LIST FOOD LENGTH = ' + _listFood.length.toString());
 
     return Scaffold(
       appBar: AppBar(
@@ -122,7 +148,7 @@ class FoodPageState extends State<FoodPage> {
                 crossAxisCount: 6,
                 staggeredTiles: _staggeredTiles,
                 children: <Widget>[
-                  Tile1(_listFood),
+                  Tile1(_listFood, last7day[6], bmr),
                   const _Example01Tile(Text("Breakfast"),
                       AssetImage('assets/images/icon/1.png')),
                   const _Example01Tile(
@@ -140,14 +166,10 @@ class FoodPageState extends State<FoodPage> {
 }
 
 class Tile1 extends StatelessWidget {
-  Tile1(this._listFood);
-  List<Map<String, String>> _listFood;
-  final mockedData = [
-    QuarterSales('Q1', 9),
-    QuarterSales('Q2', 9),
-    QuarterSales('Q3', 10),
-    QuarterSales('Q4', 7),
-  ];
+  Tile1(this._listFood, this.today, this.bmr);
+  double today;
+  String bmr;
+  List<Map<String, dynamic>> _listFood;
 
   /// Create one series with pass in data.
   List<charts.Series<QuarterSales, String>> mapChartData(
@@ -155,7 +177,7 @@ class Tile1 extends StatelessWidget {
     return [
       charts.Series<QuarterSales, String>(
         id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.cyan.shadeDefault,
         domainFn: (QuarterSales sales, _) => sales.quarter,
         measureFn: (QuarterSales sales, _) => sales.sales,
         data: data,
@@ -165,7 +187,12 @@ class Tile1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(_listFood);
+    double percent = (today / int.parse(bmr));
+    print(percent);
+    if (percent > 1) {
+      percent = 1.0;
+    }
+    print(percent);
     return new Card(
       color: Colors.white,
       child: new InkWell(
@@ -185,18 +212,18 @@ class Tile1 extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          child: Text("1000",
+                          child: Text(today.round().toString(),
                               style: TextStyle(fontSize: 50),
                               textAlign: TextAlign.center),
                         ),
                         Container(
-                          child: Text("/1000 cal",
+                          child: Text('/$bmr cal',
                               style: TextStyle(fontSize: 16),
                               textAlign: TextAlign.center),
                         ),
                       ],
                     )),
-                Text("80.0%"),
+                Text((percent * 100).toString() + ' %'),
                 Container(
                   alignment: Alignment.center,
                   child: Row(
@@ -207,7 +234,7 @@ class Tile1 extends StatelessWidget {
                         animation: true,
                         lineHeight: 20.0,
                         animationDuration: 1000,
-                        percent: 0.8,
+                        percent: percent,
                         linearStrokeCap: LinearStrokeCap.roundAll,
                         progressColor: Colors.green,
                       ),
@@ -258,7 +285,6 @@ class Tile_all_food extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(_listFoodToday.toString() + '2');
     return Card(
         color: Colors.white,
         child: new InkWell(
