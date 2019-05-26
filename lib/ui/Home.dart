@@ -119,13 +119,10 @@ class HomeState extends State<Home> {
                       accountName: Text(snapshot.data['username']),
                       accountEmail: Text(snapshot.data['email']),
                       currentAccountPicture: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(snapshot.data['urlProfilea']),
+                        backgroundImage: NetworkImage(
+                            'https://img.icons8.com/color/48/000000/circled-user-male-skin-type-4.png'),
                         backgroundColor: Colors.white,
-                        // child: Text(
-                        //   "A",
-                        //   style: TextStyle(fontSize: 40.0),
-                        // ),
+                        // child: Image(),
                       ),
                     ),
                     ListTile(
