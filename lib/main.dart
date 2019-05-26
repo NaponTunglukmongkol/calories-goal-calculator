@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/ui/bar_test.dart';
 import 'package:health_app/ui/map_screen.dart';
+import 'package:health_app/ui/test_code_ton.dart';
 import 'package:health_app/ui/wait.dart';
 
 void main() => runApp(MyApp());

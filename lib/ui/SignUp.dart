@@ -234,7 +234,9 @@ class RegisterScreenState extends State<RegisterScreen> {
                                     "age": dataRegis['age'],
                                     "height": dataRegis['height'],
                                     "weight": dataRegis['weight'],
-                                    'bmr': dataRegis['bmr']
+                                    'bmr': dataRegis['bmr'],
+                                    'urlProfilea':
+                                        "https://img.icons8.com/color/48/000000/user-male-circle.png"
                                   });
                                 });
                                 user.sendEmailVerification().then((user) {

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health_app/ui/FoodUI.dart';
 import 'package:health_app/ui/SignIn.dart';
 import 'package:health_app/ui/editProfileUI.dart';
+import 'package:health_app/ui/exListScreen.dart';
+import 'package:health_app/ui/exerciseUI.dart';
 import 'package:health_app/ui/introscreen.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -119,8 +121,8 @@ class HomeState extends State<Home> {
                       accountName: Text(snapshot.data['username']),
                       accountEmail: Text(snapshot.data['email']),
                       currentAccountPicture: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://img.icons8.com/color/48/000000/circled-user-male-skin-type-4.png'),
+                        backgroundImage:
+                            NetworkImage(snapshot.data['urlProfilea']),
                         backgroundColor: Colors.white,
                         // child: Image(),
                       ),
@@ -403,7 +405,13 @@ class Tile3 extends StatelessWidget {
     return new Card(
       color: Colors.white,
       child: new InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    settings: RouteSettings(name: "routeName"),
+                    builder: (context) => ExecisePage()));
+          },
           child: Container(
             margin: const EdgeInsets.all(20.0),
             color: const Color(0xFF00FF00),

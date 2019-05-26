@@ -40,6 +40,7 @@ dependencies:
   shared_preferences: ^0.5.2
   flutter_sparkline: ^0.1.0
   charts_flutter: ^0.6.0
+  http: ^0.11.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -60,6 +61,23 @@ flutter:
   assets:
     - assets/img/
     - assets/images/icon/
+    - images/running.png
+    - images/jumping-rope.png
+    - images/ping-pong.png
+    - images/golf.png
+    - images/football.png
+    - images/cycling.png
+    - images/bowling.png
+    - images/swimming-pool.png
+    - images/tennis.png
+    - images/volleyball.png
+    - images/basketball.png
+    - images/boxing.png
+    - images/climbing.png
+    - images/karate.png
+    - images/walking.png
+    - images/meditation.png
+
   fonts:
     - family: SF-Pro-Text
       fonts:

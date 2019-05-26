@@ -187,7 +187,7 @@ class Tile1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double percent = (today / int.parse(bmr));
+    double percent = (today / double.parse(bmr));
     print(percent);
     if (percent > 1) {
       percent = 1.0;
