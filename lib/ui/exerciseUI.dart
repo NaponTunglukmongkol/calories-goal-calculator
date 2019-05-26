@@ -28,6 +28,11 @@ List<double> last7day = [0, 0, 0, 0, 0, 0, 0];
 List<int> day_in_7 = [0, 0, 0, 0, 0, 0, 0];
 
 class ExecisePage extends StatefulWidget {
+  String string;
+  ExecisePage(user);
+
+  
+
   @override
   State<StatefulWidget> createState() {
     return ExecisePageState();
@@ -35,6 +40,8 @@ class ExecisePage extends StatefulWidget {
 }
 
 class ExecisePageState extends State<ExecisePage> {
+
+  
   var url =
       "https://raw.githubusercontent.com/benning55/exercise/master/db.json?fbclid=IwAR2ciBvMxgSOJ9_IPBNVEPfOZAEeYhhAncRaGmvzef92clHLzn6XRQxUB6Q";
 
@@ -188,7 +195,7 @@ class _Example01Tile extends StatelessWidget {
         child: new InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ExcerciseBook()));
+                  MaterialPageRoute(builder: (context) => Exercise()));
             },
             child: Center(
               child: new Container(

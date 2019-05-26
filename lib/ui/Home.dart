@@ -101,7 +101,7 @@ class HomeState extends State<Home> {
                           // const Tile1(String target),
                           const Tile1(Colors.white, Icons.wifi),
                           Tile2(user, snapshot.data['bmr']),
-                          const Tile3(Colors.white, Icons.map),
+                          Tile3(user, Colors.white, Icons.map),
                         ],
                         mainAxisSpacing: 0.0,
                         crossAxisSpacing: 0.0,
@@ -396,9 +396,11 @@ class Tile2 extends StatelessWidget {
 }
 
 class Tile3 extends StatelessWidget {
-  const Tile3(this.backgroundColor, this.iconData);
+  Tile3(this.user, this.backgroundColor, this.iconData);
   final Color backgroundColor;
   final IconData iconData;
+  final String user;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -410,7 +412,7 @@ class Tile3 extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     settings: RouteSettings(name: "routeName"),
-                    builder: (context) => ExecisePage()));
+                    builder: (context) => ExecisePage(user)));
           },
           child: Container(
             margin: const EdgeInsets.all(20.0),

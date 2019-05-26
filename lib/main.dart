@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Carolies-Count-App',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'SF-Pro-Text8'),
       debugShowCheckedModeBanner: false,
-      home: GetLocationPage(),
+      home: Wait(),
     );
   }
 }

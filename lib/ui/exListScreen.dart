@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:health_app/model/workOut.dart';
 // import 'package:health_app/ui/list_food.dart';
 // import './image_pick.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'exDetail.dart';
+
+var data;
 
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(3, 2),
@@ -22,44 +30,78 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(3, 2),
   const StaggeredTile.count(3, 2),
 ];
-List<Widget> _tiles = const <Widget>[
-  const TileFood(
-      Text("Running"), AssetImage('images/running.png'), 'beef & veal_data'),
-  const TileFood(Text("Rope Jumping"), AssetImage('images/jumping-rope.png'),
-      'cakes&pies_data'),
-  const TileFood(
-      Text("Basketball"), AssetImage('images/basketball.png'), 'dishes_data'),
-  const TileFood(
-      Text("Bowling"), AssetImage('images/bowling.png'), 'fast_food_data'),
-  const TileFood(
-      Text("Cycling"), AssetImage('images/cycling.png'), 'fish&seafood_data'),
-  const TileFood(
-      Text("Football"), AssetImage('images/football.png'), 'fruits_data'),
-  const TileFood(Text("Golf"), AssetImage('images/golf.png'), 'juices_data'),
-  const TileFood(
-      Text("Table Tennis"), AssetImage('images/ping-pong.png'), 'meat_data'),
-  const TileFood(
-      Text("Swimming"), AssetImage('images/swimming-pool.png'), 'soup_data'),
-  const TileFood(Text("Volleyball"), AssetImage('images/volleyball.png'),
-      'vegetables_data'),
-  const TileFood(
-      Text("Boxing"), AssetImage('images/boxing.png'), 'vegetables_data'),
-  const TileFood(
-      Text("Climbling"), AssetImage('images/climbing.png'), 'vegetables_data'),
-  const TileFood(
-      Text("Martial Arts"), AssetImage('images/karate.png'), 'vegetables_data'),
-  const TileFood(
-      Text("Tennis"), AssetImage('images/tennis.png'), 'vegetables_data'),
-  const TileFood(
-      Text("Walk"), AssetImage('images/walking.png'), 'vegetables_data'),
-  const TileFood(
-      Text("Yoga"), AssetImage('images/meditation.png'), 'vegetables_data'),
+List<Widget> _tiles = <Widget>[
+  TileFood(
+      Text("Running"), AssetImage('assets/images/icon/running.png'), Workout.setValue(data[0]['id'], data[0]['type'], data[0]['minutes'], data[0]['cal'])),
+  TileFood(Text("Rope Jumping"), AssetImage('assets/images/icon/jumping-rope.png'),
+      Workout.setValue(data[1]['id'], data[1]['type'], data[1]['minutes'], data[1]['cal'])),
+  TileFood(
+      Text("Basketball"), AssetImage('assets/images/icon/basketball.png'), Workout.setValue(data[4]['id'], data[4]['type'], data[4]['minutes'], data[4]['cal'])),
+  TileFood(
+      Text("Bowling"), AssetImage('assets/images/icon/bowling.png'), Workout.setValue(data[10]['id'], data[10]['type'], data[10]['minutes'], data[10]['cal'])),
+  TileFood(
+      Text("Cycling"), AssetImage('assets/images/icon/cycling.png'), Workout.setValue(data[5]['id'], data[5]['type'], data[5]['minutes'], data[5]['cal'])),
+  TileFood(
+      Text("Football"), AssetImage('assets/images/icon/football.png'), Workout.setValue(data[7]['id'], data[7]['type'], data[7]['minutes'], data[7]['cal'])),
+  TileFood(Text("Golf"), AssetImage('assets/images/icon/golf.png'), Workout.setValue(data[13]['id'], data[13]['type'], data[13]['minutes'], data[13]['cal'])),
+  TileFood(
+      Text("Table Tennis"), AssetImage('assets/images/icon/ping-pong.png'), Workout.setValue(data[9]['id'], data[9]['type'], data[9]['minutes'], data[9]['cal'])),
+  TileFood(
+      Text("Swimming"), AssetImage('assets/images/icon/swimming-pool.png'), Workout.setValue(data[2]['id'], data[2]['type'], data[2]['minutes'], data[2]['cal'])),
+  TileFood(Text("Volleyball"), AssetImage('assets/images/icon/volleyball.png'),
+      Workout.setValue(data[11]['id'], data[11]['type'], data[11]['minutes'], data[11]['cal'])),
+  TileFood(
+      Text("Boxing"), AssetImage('assets/images/icon/boxing.png'), Workout.setValue(data[6]['id'], data[6]['type'], data[6]['minutes'], data[6]['cal'])),
+  TileFood(
+      Text("Climbling"), AssetImage('assets/images/icon/climbing.png'), Workout.setValue(data[15]['id'], data[15]['type'], data[15]['minutes'], data[15]['cal'])),
+  TileFood(
+      Text("Martial Arts"), AssetImage('assets/images/icon/karate.png'), Workout.setValue(data[17]['id'], data[17]['type'], data[17]['minutes'], data[17]['cal'])),
+  TileFood(
+      Text("Tennis"), AssetImage('assets/images/icon/tennis.png'), Workout.setValue(data[8]['id'], data[8]['type'], data[8]['minutes'], data[8]['cal'])),
+  TileFood(
+      Text("Walk"), AssetImage('assets/images/icon/walking.png'), Workout.setValue(data[12]['id'], data[12]['type'], data[12]['minutes'], data[12]['cal'])),
+  TileFood(
+      Text("Yoga"), AssetImage('assets/images/icon/meditation.png'), Workout.setValue(data[14]['id'], data[14]['type'], data[14]['minutes'], data[14]['cal'])),
 ];
 
-class ExcerciseBook extends StatelessWidget {
+class Exercise extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return ExerciseState();
+  }
+  
+}
+
+class ExerciseState extends State<Exercise> {
+
+  String url =
+      'https://raw.githubusercontent.com/benning55/exercise/master/db.json';
+  Future<String> makeRequest() async {
+    var response = await http.get(Uri.encodeFull(url));
+    setState(() {
+     data = json.decode(response.body).cast<Map<String, dynamic>>(); 
+    });
+  }
+
+  @override
+  void initState() {
+    this.makeRequest();
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if(data == null){
+      return Scaffold(
+      appBar: AppBar(
+        title: Text('Exercise you might interest'),
+      ),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    }else{
+      return Scaffold(
       appBar: AppBar(
         title: Text('Exercise you might interest'),
       ),
@@ -77,15 +119,17 @@ class ExcerciseBook extends StatelessWidget {
             )),
       ),
     );
+    }
   }
 }
 
 class TileFood extends StatelessWidget {
-  const TileFood(this.text, this.icon, this.databaseName);
+  TileFood(this.text, this.icon, this.workout);
 
   final Text text;
   final AssetImage icon;
-  final String databaseName;
+  final Workout workout;
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +137,10 @@ class TileFood extends StatelessWidget {
         color: Colors.white,
         child: new InkWell(
             onTap: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => ListFood(databaseName)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ExerciseDetail(workout)));
             },
             child: Center(
               child: new Container(
