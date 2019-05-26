@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -66,6 +67,10 @@ class CameraScreen extends StatefulWidget {
 // }
 
 class CameraScreenState extends State {
+  final _formkey = GlobalKey<FormState>();
+  TextEditingController weight = TextEditingController();
+  TextEditingController height = TextEditingController();
+  TextEditingController name = TextEditingController();
   String user;
   CameraScreenState(this.user);
   File sampleImage;
@@ -84,7 +89,21 @@ class CameraScreenState extends State {
     });
   }
 
+  String accountStatus = '******';
+  FirebaseUser mCurrentUser;
+  FirebaseAuth _auth;
   @override
+  void initState() {
+    super.initState();
+    _auth = FirebaseAuth.instance;
+    _getCurrentUser();
+    print('here outside async');
+  }
+
+  _getCurrentUser() async {
+    mCurrentUser = await _auth.currentUser();
+    print(mCurrentUser.uid);
+  }
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
@@ -110,6 +129,65 @@ class CameraScreenState extends State {
                   ? Text('Select an image')
                   : enableUpload(),
             ),
+            StreamBuilder<Object>(
+              stream: Firestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot) {
+                String prename = '';
+                DocumentReference documentReference = Firestore.instance.collection("users").document(mCurrentUser.uid);
+                documentReference.get().then((datasnapshot) {
+                  if (datasnapshot.exists) {
+                    print(datasnapshot.data['username'].toString());
+                    prename = datasnapshot.data['weight'].toString();
+                  }
+                  else{
+                    print("No such user");
+                  }
+                });
+                print(prename);
+                return Padding(
+                  padding: const EdgeInsets.all(22.0),
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: name,
+                          decoration: InputDecoration(labelText: "Username", hintText: "Insert new username left void to not change", icon: Icon(Icons.person)),
+                          validator: (value) {},
+                        ),
+                        TextFormField(
+                          controller: weight,
+                          decoration: InputDecoration(labelText: "Weight", hintText: "Insert new weight left void to not change", icon: Icon(Icons.pregnant_woman)),
+                          validator: (value) {},
+                        ),
+                        TextFormField(
+                          controller: height,
+                          decoration: InputDecoration(labelText: "Height", hintText: "Insert new height left void to not change", icon: Icon(Icons.accessibility)),
+                          validator: (value) {},
+                        ),
+                        RaisedButton(
+                          child: Text("Save"),
+                          onPressed: () {
+                            if (_formkey.currentState.validate()) {
+                              if(name.text != ''){
+                                Firestore.instance.collection('users').document(mCurrentUser.uid).updateData({'username' : name.text});
+                              }
+                              if(weight.text != ''){
+                                Firestore.instance.collection('users').document(mCurrentUser.uid).updateData({'weight' : weight.text});
+                              }
+                              if(height.text != ''){
+                                Firestore.instance.collection('users').document(mCurrentUser.uid).updateData({'height' : height.text});
+                              }
+                              Navigator.pop(context);
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }
+            )
           ],
         )
         // floatingActionButton: new FloatingActionButton(
