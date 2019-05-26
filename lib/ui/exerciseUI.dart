@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/ui/exListScreen.dart';
@@ -10,38 +11,32 @@ import 'package:charts_flutter/flutter.dart' as charts;
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(6, 7),
   const StaggeredTile.count(6, 2),
-  const StaggeredTile.count(3, 2),
+  const StaggeredTile.fit(6),
   // const StaggeredTile.count(2, 2),
   // const StaggeredTile.count(2, 2),
 ];
 
 bool loading = false;
 List<Map<String, dynamic>> _listFood = [];
-List<QuarterSales> mockedData = [
-  QuarterSales('a1', 91),
-  QuarterSales('a2', 31),
-  QuarterSales('a3', 51),
-  QuarterSales('a4', 71),
-];
+List<QuarterSales> mockedData = [];
 
 List<double> last7day = [0, 0, 0, 0, 0, 0, 0];
 List<int> day_in_7 = [0, 0, 0, 0, 0, 0, 0];
 
 class ExecisePage extends StatefulWidget {
-  String string;
-  ExecisePage(user);
-
-  
+  String user;
+  ExecisePage(this.user);
 
   @override
   State<StatefulWidget> createState() {
-    return ExecisePageState();
+    return ExecisePageState(user);
   }
 }
 
 class ExecisePageState extends State<ExecisePage> {
+  String user;
+  ExecisePageState(this.user);
 
-  
   var url =
       "https://raw.githubusercontent.com/benning55/exercise/master/db.json?fbclid=IwAR2ciBvMxgSOJ9_IPBNVEPfOZAEeYhhAncRaGmvzef92clHLzn6XRQxUB6Q";
 
@@ -56,6 +51,92 @@ class ExecisePageState extends State<ExecisePage> {
 
   @override
   Widget build(BuildContext context) {
+    // listFoodToday.clear();
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection('users')
+          .document(user)
+          .collection('all_exercise_add')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+
+        return _buildList(context, snapshot.data.documents);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    print("##############################");
+    print(snapshot[0].data);
+
+    List<Widget> listFoodToday = [
+      Container(
+        color: Colors.blueAccent,
+        child: ListTile(
+          title: Text(
+            "Eaten in Today",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: Text("Time"),
+        ),
+      )
+    ];
+    _listFood.clear();
+    day_in_7 = [0, 0, 0, 0, 0, 0, 0];
+    last7day = [0, 0, 0, 0, 0, 0, 0];
+
+    if (_listFood.length < snapshot.length) {
+      for (int i = 0; i < snapshot.length; i++) {
+        _listFood.add({
+          "cal": snapshot[i].data["cal"].toString(),
+          "day": snapshot[i].data["day"].toString(),
+          "hours": snapshot[i].data["hours"].toString(),
+          "minute": snapshot[i].data["minute"].toString(),
+          "month": snapshot[i].data["month"].toString(),
+          "name": snapshot[i].data["name"].toString(),
+          "unit": snapshot[i].data["unit"].toString(),
+          "year": snapshot[i].data["year"].toString()
+        });
+        if (snapshot[i].data['day'].toString() ==
+                DateTime.now().day.toString() &&
+            snapshot[i].data['month'].toString() ==
+                DateTime.now().month.toString()) {
+          listFoodToday.add(new ListTile(
+            subtitle: Text(snapshot[i].data["cal"].toString()),
+            title: Text(snapshot[i].data["exerciseName"].toString()),
+            trailing: Text(snapshot[i].data["hours"].toString() +
+                ':' +
+                snapshot[i].data["minute"].toString()),
+          ));
+        }
+
+        for (int x = 0; x < 7; x++) {
+          DateTime date = DateTime.now();
+          day_in_7[x] = date.subtract(Duration(days: x)).day;
+          if (date.subtract(Duration(days: x)).day == snapshot[i].data["day"]) {
+            print(snapshot[i].data["name"].toString() +
+                ' ' +
+                snapshot[i].data["day"].toString() +
+                ' ' +
+                snapshot[i].data["cal"].toString());
+            last7day[x] += double.parse(snapshot[i].data["cal"].toString());
+          }
+        }
+      }
+
+      day_in_7 = day_in_7.reversed.toList();
+      last7day = last7day.reversed.toList();
+      print(day_in_7);
+      print(last7day);
+      for (int d = 0; d < day_in_7.length; d++) {
+        mockedData.add(QuarterSales(day_in_7[d].toString(), last7day[d]));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -84,9 +165,10 @@ class ExecisePageState extends State<ExecisePage> {
             crossAxisCount: 6,
             staggeredTiles: _staggeredTiles,
             children: <Widget>[
-              Tile1(),
-              const _Example01Tile(Text("Exercise List"),
-                  AssetImage('assets/images/icon/2.png')),
+              Tile1(_listFood, last7day[6]),
+              _Example01Tile(Text("Exercise List"),
+                  AssetImage('assets/images/icon/2.png'), last7day[6]),
+              Tile_all_food(listFoodToday),
             ],
             mainAxisSpacing: 0.0,
             crossAxisSpacing: 0.0,
@@ -96,6 +178,9 @@ class ExecisePageState extends State<ExecisePage> {
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {}
 }
 
 class Tile1 extends StatelessWidget {
@@ -103,6 +188,11 @@ class Tile1 extends StatelessWidget {
   // double today;
   // String bmr;
   // List<Map<String, dynamic>> _listFood;
+
+  Tile1(this._listFood, this.today);
+  double today;
+  String bmr;
+  List<Map<String, dynamic>> _listFood;
 
   List<charts.Series<QuarterSales, String>> mapChartData(
       List<QuarterSales> data) {
@@ -136,20 +226,20 @@ class Tile1 extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      "mock",
+                      today.toString() + 'Kcal',
                       style: TextStyle(fontSize: 50),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Container(
-                    child: Text('Mock',
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center),
-                  ),
+                  // Container(
+                  //   child: Text('Mock',
+                  //       style: TextStyle(fontSize: 16),
+                  //       textAlign: TextAlign.center),
+                  // ),
                 ],
               ),
             ),
-            Text("Mock"),
+            // Text("Mock"),
             Container(
               height: 200,
               child: SimpleBarChart(mapChartData(mockedData)),
@@ -183,7 +273,8 @@ class Tile1 extends StatelessWidget {
 }
 
 class _Example01Tile extends StatelessWidget {
-  const _Example01Tile(this.text, this.icon);
+  double today;
+  _Example01Tile(this.text, this.icon, this.today);
 
   final Text text;
   final AssetImage icon;
@@ -194,8 +285,8 @@ class _Example01Tile extends StatelessWidget {
         color: Colors.white,
         child: new InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Exercise()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Exercise()));
             },
             child: Center(
               child: new Container(
@@ -205,6 +296,25 @@ class _Example01Tile extends StatelessWidget {
                   children: <Widget>[Image(image: icon, width: 80.0), text],
                 ),
               ),
+            )));
+  }
+}
+
+class Tile_all_food extends StatelessWidget {
+  Tile_all_food(this._listFoodToday);
+  List<Widget> _listFoodToday;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        color: Colors.white,
+        child: new InkWell(
+            onTap: () {
+              // Navigator.push(
+              //     context, MaterialPageRoute(builder: (context) => MenuBook()));
+            },
+            child: Column(
+              children: _listFoodToday,
             )));
   }
 }
