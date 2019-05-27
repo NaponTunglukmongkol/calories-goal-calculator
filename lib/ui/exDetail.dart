@@ -4,13 +4,12 @@ import 'package:health_app/model/workOut.dart';
 import 'package:flutter_duration_picker/flutter_duration_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 String type;
 int cal;
 int minute;
 
-class ExerciseDetail extends StatefulWidget{
-  Workout workout; 
+class ExerciseDetail extends StatefulWidget {
+  Workout workout;
   ExerciseDetail(this.workout);
 
   @override
@@ -18,10 +17,9 @@ class ExerciseDetail extends StatefulWidget{
     // TODO: implement createState
     return ExerciseDetailState(workout);
   }
-
 }
 
-class ExerciseDetailState extends State<ExerciseDetail>{
+class ExerciseDetailState extends State<ExerciseDetail> {
   String user = '';
   Workout workout;
   ExerciseDetailState(this.workout);
@@ -51,7 +49,16 @@ class ExerciseDetailState extends State<ExerciseDetail>{
     getLogin();
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("title"),
+        title: new Text("Add Exercise"),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Color(0xFF3366FF), Color(0xFF00CCFF)],
+            ),
+          ),
+        ),
       ),
       body: new Center(
         child: new Column(
@@ -65,10 +72,10 @@ class ExerciseDetailState extends State<ExerciseDetail>{
                 textAlign: TextAlign.center,
               ),
             ),
-            Text("~ "+ cal_burn.toString() + " cal"+" 🔥",
-            style: TextStyle(fontSize: 20.0)),
-            Text("~ "+ minute_now.toString() + " minutes"+" 🕒",
-            style: TextStyle(fontSize: 20.0)),
+            Text("~ " + cal_burn.toString() + " cal" + " 🔥",
+                style: TextStyle(fontSize: 20.0)),
+            Text("~ " + minute_now.toString() + " minutes" + " 🕒",
+                style: TextStyle(fontSize: 20.0)),
             new Expanded(
                 child: DurationPicker(
               duration: _duration,
@@ -80,30 +87,34 @@ class ExerciseDetailState extends State<ExerciseDetail>{
             )),
             Container(
               margin: EdgeInsets.only(bottom: 50),
-              child: RaisedButton(
-                child: Text("Submit"),
-                onPressed: (){
-                             Firestore.instance
-                              .runTransaction((Transaction transaction) async {
-                            DocumentReference reference = Firestore.instance
-                                .collection('users')
-                                .document('$user')
-                                .collection('all_exercise_add')
-                                .document();
-                            await reference.setData({
-                              "exerciseName": type,
-                              "duration": minute_now,
-                              "cal": cal_burn,
-                              'hours': DateTime.now().hour,
-                              'minute': DateTime.now().minute,
-                              'day': DateTime.now().day,
-                              'month': DateTime.now().month,
-                              'year': DateTime.now().year,
-                              'timestamp': DateTime.now(),
-                            });
-                          });
-                          Navigator.of(context)
-                              .popUntil(ModalRoute.withName("routeName"));
+              child: FlatButton(
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.greenAccent,
+                  size: 70,
+                ),
+                onPressed: () {
+                  Firestore.instance
+                      .runTransaction((Transaction transaction) async {
+                    DocumentReference reference = Firestore.instance
+                        .collection('users')
+                        .document('$user')
+                        .collection('all_exercise_add')
+                        .document();
+                    await reference.setData({
+                      "exerciseName": type,
+                      "duration": minute_now,
+                      "cal": cal_burn,
+                      'hours': DateTime.now().hour,
+                      'minute': DateTime.now().minute,
+                      'day': DateTime.now().day,
+                      'month': DateTime.now().month,
+                      'year': DateTime.now().year,
+                      'timestamp': DateTime.now(),
+                    });
+                  });
+                  Navigator.of(context)
+                      .popUntil(ModalRoute.withName("routeName"));
                 },
               ),
             )

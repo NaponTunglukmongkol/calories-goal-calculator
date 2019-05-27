@@ -105,7 +105,8 @@ class CameraScreenState extends State {
     print(mCurrentUser.uid);
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildList(BuildContext context, DocumentSnapshot snapshot) {
+    String img_profile = snapshot.data['urlProfilea'];
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Image Upload'),
@@ -113,17 +114,26 @@ class CameraScreenState extends State {
         ),
         body: Column(
           children: <Widget>[
-            RaisedButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                getImage();
-              },
+            CircleAvatar(
+              radius: 30.0,
+              backgroundImage: NetworkImage(snapshot.data['urlProfilea']),
+              backgroundColor: Colors.transparent,
             ),
-            RaisedButton(
-              child: Icon(Icons.camera),
-              onPressed: () {
-                getCamera();
-              },
+            Row(
+              children: <Widget>[
+                RaisedButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    getImage();
+                  },
+                ),
+                RaisedButton(
+                  child: Icon(Icons.camera),
+                  onPressed: () {
+                    getCamera();
+                  },
+                ),
+              ],
             ),
             new Center(
               child: sampleImage == null
@@ -152,22 +162,20 @@ class CameraScreenState extends State {
                       key: _formkey,
                       child: Column(
                         children: <Widget>[
-                          Container(
-                            color: Colors.green,
-                            height: 100,
-                            width: 100,
-                            // child: ClipOval(
-                            //   child: Image.network(
-                            //     datasnapshot.data['weight'].toString(),
-                            //     width: 100,
-                            //     height: 100,
-                            //     fit: BoxFit.cover,
-                            //   ),
-                            // ),
-                          ),
-                          Text(''),
-                          Text(''),
-                          Text(''),
+                          // Container(
+                          //   color: Colors.green,
+                          //   height: 100,
+                          //   width: 100,
+                          //   // child: ClipOval(
+                          //   //   child: Image.network(
+                          //   //     datasnapshot.data['weight'].toString(),
+                          //   //     width: 100,
+                          //   //     height: 100,
+                          //   //     fit: BoxFit.cover,
+                          //   //   ),
+                          //   // ),
+                          // ),
+
                           TextFormField(
                             controller: name,
                             decoration: InputDecoration(
@@ -197,27 +205,75 @@ class CameraScreenState extends State {
                           ),
                           RaisedButton(
                             child: Text("Save"),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formkey.currentState.validate()) {
-                                if (name.text != '') {
-                                  Firestore.instance
-                                      .collection('users')
-                                      .document(mCurrentUser.uid)
-                                      .updateData({'username': name.text});
+                                final StorageReference firebaseStorageRef =
+                                    FirebaseStorage.instance
+                                        .ref()
+                                        .child('$user')
+                                        .child('profile');
+                                final StorageUploadTask task =
+                                    firebaseStorageRef.putFile(sampleImage);
+
+                                // final ref = FirebaseStorage.instance
+                                //     .ref()
+                                //     .child('$user')
+                                //     .child('profile');
+
+                                if (sampleImage.toString().length == 0) {
+                                  if (name.text != '') {
+                                    Firestore.instance
+                                        .collection('users')
+                                        .document(mCurrentUser.uid)
+                                        .updateData({'username': name.text});
+                                  }
+                                  if (weight.text != '') {
+                                    Firestore.instance
+                                        .collection('users')
+                                        .document(mCurrentUser.uid)
+                                        .updateData({'weight': weight.text});
+                                  }
+                                  if (height.text != '') {
+                                    Firestore.instance
+                                        .collection('users')
+                                        .document(mCurrentUser.uid)
+                                        .updateData({'height': height.text});
+                                  }
+                                  Navigator.pop(context);
+                                } else {
+                                  if (name.text != '') {
+                                    Firestore.instance
+                                        .collection('users')
+                                        .document(mCurrentUser.uid)
+                                        .updateData({'username': name.text});
+                                  }
+                                  if (weight.text != '') {
+                                    Firestore.instance
+                                        .collection('users')
+                                        .document(mCurrentUser.uid)
+                                        .updateData({'weight': weight.text});
+                                  }
+                                  if (height.text != '') {
+                                    Firestore.instance
+                                        .collection('users')
+                                        .document(mCurrentUser.uid)
+                                        .updateData({'height': height.text});
+                                  }
+                                  var url =
+                                      await firebaseStorageRef.getDownloadURL();
+                                  print(url);
+                                  Firestore.instance.runTransaction(
+                                      (Transaction transaction) async {
+                                    DocumentReference reference = Firestore
+                                        .instance
+                                        .collection('users')
+                                        .document('$user');
+                                    await reference.updateData({
+                                      "urlProfilea": url,
+                                    });
+                                  });
+                                  Navigator.pop(context);
                                 }
-                                if (weight.text != '') {
-                                  Firestore.instance
-                                      .collection('users')
-                                      .document(mCurrentUser.uid)
-                                      .updateData({'weight': weight.text});
-                                }
-                                if (height.text != '') {
-                                  Firestore.instance
-                                      .collection('users')
-                                      .document(mCurrentUser.uid)
-                                      .updateData({'height': height.text});
-                                }
-                                Navigator.pop(context);
                               }
                             },
                           )
@@ -237,59 +293,34 @@ class CameraScreenState extends State {
   }
 
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection('users')
-          .document(user)
-          .collection('all_food_add')
-          .snapshots(),
+    return StreamBuilder<DocumentSnapshot>(
+      stream: Firestore.instance.collection('users').document(user).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(
             child: CircularProgressIndicator(),
           );
 
-        return _buildList(context, snapshot.data.documents);
+        return _buildList(context, snapshot.data);
       },
     );
   }
 
   Widget enableUpload() {
     return Container(
+      color: Colors.teal,
       child: Column(
         children: <Widget>[
-          Image.file(sampleImage, height: 300.0, width: 300.0),
-          Text(sampleImage.toString()),
-          RaisedButton(
-            elevation: 7.0,
-            child: Text('Upload'),
-            textColor: Colors.white,
-            color: Colors.blue,
-            onPressed: () async {
-              final StorageReference firebaseStorageRef = FirebaseStorage
-                  .instance
-                  .ref()
-                  .child('$user')
-                  .child('profile');
-              final StorageUploadTask task =
-                  firebaseStorageRef.putFile(sampleImage);
+          Image.file(sampleImage, height: 100.0, width: 100.0),
 
-              // final ref = FirebaseStorage.instance
-              //     .ref()
-              //     .child('$user')
-              //     .child('profile');
-              var url = await firebaseStorageRef.getDownloadURL();
-              print(url);
-              Firestore.instance
-                  .runTransaction((Transaction transaction) async {
-                DocumentReference reference =
-                    Firestore.instance.collection('users').document('$user');
-                await reference.updateData({
-                  "urlProfilea": url,
-                });
-              });
-            },
-          )
+          // Text(sampleImage.toString()),
+          // RaisedButton(
+          //   elevation: 7.0,
+          //   child: Text('Upload'),
+          //   textColor: Colors.white,
+          //   color: Colors.blue,
+          //   onPressed: () async {},
+          // )
         ],
       ),
     );

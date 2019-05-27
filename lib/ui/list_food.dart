@@ -152,35 +152,47 @@ class ListFoodState extends State<ListFood> {
   }
 
   Widget buildAppBar(BuildContext context) {
-    return new AppBar(centerTitle: true, title: appBarTitle, actions: <Widget>[
-      new IconButton(
-        icon: icon,
-        onPressed: () {
-          setState(() {
-            if (this.icon.icon == Icons.search) {
-              this.icon = new Icon(
-                Icons.close,
-                color: Colors.white,
-              );
-              this.appBarTitle = new TextField(
-                controller: _controller,
-                style: new TextStyle(
-                  color: Colors.white,
-                ),
-                decoration: new InputDecoration(
-                    prefixIcon: new Icon(Icons.search, color: Colors.white),
-                    hintText: "Search...",
-                    hintStyle: new TextStyle(color: Colors.white)),
-                onChanged: searchOperation,
-              );
-              _handleSearchStart();
-            } else {
-              _handleSearchEnd();
-            }
-          });
-        },
-      ),
-    ]);
+    return new AppBar(
+        centerTitle: true,
+        title: appBarTitle,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Color(0xFF3366FF), Color(0xFF00CCFF)],
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          new IconButton(
+            icon: icon,
+            onPressed: () {
+              setState(() {
+                if (this.icon.icon == Icons.search) {
+                  this.icon = new Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  );
+                  this.appBarTitle = new TextField(
+                    controller: _controller,
+                    style: new TextStyle(
+                      color: Colors.white,
+                    ),
+                    decoration: new InputDecoration(
+                        prefixIcon: new Icon(Icons.search, color: Colors.white),
+                        hintText: "Search...",
+                        hintStyle: new TextStyle(color: Colors.white)),
+                    onChanged: searchOperation,
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+          ),
+        ]);
   }
 
   void _handleSearchStart() {

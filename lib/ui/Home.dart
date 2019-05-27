@@ -78,7 +78,7 @@ class HomeState extends State<Home> {
           default:
             return Scaffold(
               appBar: AppBar(
-                title: Text("data"),
+                title: Text("Calories App"),
                 centerTitle: true,
                 flexibleSpace: Container(
                   decoration: BoxDecoration(
@@ -91,6 +91,7 @@ class HomeState extends State<Home> {
                 ),
               ),
               body: Container(
+                  color: Colors.blueGrey,
                   child: Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: new StaggeredGridView.count(
@@ -127,10 +128,6 @@ class HomeState extends State<Home> {
                       ),
                     ),
                     ListTile(
-                      title: Text("Goal"),
-                      onTap: () {},
-                    ),
-                    ListTile(
                       title: Text("Edit Profile"),
                       onTap: () async {
                         NavigatorState navigator = Navigator.of(context);
@@ -152,10 +149,7 @@ class HomeState extends State<Home> {
                         //         builder: (context) => CameraScreen()));
                       },
                     ),
-                    ListTile(
-                      title: Text("Setting"),
-                      onTap: () {},
-                    ),
+
                     ListTile(
                       title: Text("Features"),
                       onTap: () async {
@@ -306,7 +300,6 @@ class Tile1 extends StatelessWidget {
           onTap: () {},
           child: Container(
             margin: const EdgeInsets.all(20.0),
-            color: const Color(0xFF00FF00),
             constraints: BoxConstraints(minWidth: 100.0, minHeight: 150.0),
             child: Column(
               children: <Widget>[
@@ -314,20 +307,17 @@ class Tile1 extends StatelessWidget {
                   children: <Widget>[Text("cal")],
                 ),
                 Container(
-                    color: Colors.blueAccent,
                     alignment: Alignment.center,
                     constraints:
                         BoxConstraints(minWidth: 100.0, minHeight: 100.0),
                     child: Column(
                       children: <Widget>[
                         Container(
-                          color: Colors.brown,
                           child: Text("1000",
                               style: TextStyle(fontSize: 50),
                               textAlign: TextAlign.center),
                         ),
                         Container(
-                          color: Colors.indigo,
                           child: Text("/1000 cal",
                               style: TextStyle(fontSize: 16),
                               textAlign: TextAlign.center),
@@ -361,7 +351,6 @@ class Tile2 extends StatelessWidget {
           },
           child: Container(
             margin: const EdgeInsets.all(20.0),
-            color: const Color(0xFF00FF00),
             constraints: BoxConstraints(minWidth: 100.0, minHeight: 150.0),
             child: Column(
               children: <Widget>[
@@ -369,7 +358,6 @@ class Tile2 extends StatelessWidget {
                   children: <Widget>[Text("Food")],
                 ),
                 Container(
-                    color: Colors.blueAccent,
                     alignment: Alignment.center,
                     constraints:
                         BoxConstraints(minWidth: 100.0, minHeight: 100.0),
@@ -414,7 +402,6 @@ class Tile3 extends StatelessWidget {
           },
           child: Container(
             margin: const EdgeInsets.all(20.0),
-            color: const Color(0xFF00FF00),
             constraints: BoxConstraints(minWidth: 100.0, minHeight: 150.0),
             child: Column(
               children: <Widget>[
@@ -422,7 +409,6 @@ class Tile3 extends StatelessWidget {
                   children: <Widget>[Text("Step")],
                 ),
                 Container(
-                    color: Colors.blueAccent,
                     alignment: Alignment.center,
                     constraints:
                         BoxConstraints(minWidth: 100.0, minHeight: 100.0),

@@ -6,15 +6,17 @@ import 'package:health_app/ui/map_screen.dart';
 import 'package:health_app/ui/menu_group.dart';
 import 'package:health_app/ui/simple_bar_chart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:health_app/ui/test_exUI.dart';
 import 'package:location/location.dart';
 // import 'package:percent_indicator/percent_indicator.dart';
 // import 'package:progress_indicators/progress_indicators.dart';
 
 List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(6, 7),
-  const StaggeredTile.count(6, 2),
+  const StaggeredTile.count(3, 2),
+  const StaggeredTile.count(3, 2),
   const StaggeredTile.fit(6),
-  const StaggeredTile.count(6, 2),
+
   // const StaggeredTile.count(2, 2),
   // const StaggeredTile.count(2, 2),
 ];
@@ -85,10 +87,10 @@ class ExecisePageState extends State<ExecisePage> {
         color: Colors.blueAccent,
         child: ListTile(
           title: Text(
-            "Eaten in Today",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            "Exercise in Today",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          trailing: Text("Time"),
+          trailing: Text("Time", style: TextStyle(color: Colors.white)),
         ),
       )
     ];
@@ -173,10 +175,12 @@ class ExecisePageState extends State<ExecisePage> {
             staggeredTiles: _staggeredTiles,
             children: <Widget>[
               Tile1(_listFood, last7day[6]),
-              _Example01Tile(Text("Exercise List"),
-                  AssetImage('assets/images/icon/2.png'), last7day[6]),
-              Tile_all_food(listFoodToday),
+              _Example01Tile(
+                  Text("Exercise List"),
+                  AssetImage('assets/images/icon/swimming-pool.png'),
+                  last7day[6]),
               Tile_Map(listFoodToday),
+              Tile_all_food(listFoodToday),
             ],
             mainAxisSpacing: 0.0,
             crossAxisSpacing: 0.0,
@@ -234,16 +238,16 @@ class Tile1 extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      today.toString() + 'Kcal',
+                      today.toString(),
                       style: TextStyle(fontSize: 50),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  // Container(
-                  //   child: Text('Mock',
-                  //       style: TextStyle(fontSize: 16),
-                  //       textAlign: TextAlign.center),
-                  // ),
+                  Container(
+                    child: Text('Kcal',
+                        style: TextStyle(fontSize: 16),
+                        textAlign: TextAlign.center),
+                  ),
                 ],
               ),
             ),
@@ -293,8 +297,8 @@ class _Example01Tile extends StatelessWidget {
         color: Colors.white,
         child: new InkWell(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Exercise()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ExerciseList()));
             },
             child: Center(
               child: new Container(
@@ -351,9 +355,10 @@ class Tile_Map extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MapScreen(
-                              lati: userLocation["latitude"],
-                              long: userLocation["longitude"])));
+                          builder: (context) =>
+                              MapScreen(lati: 13.6623374, long: 100.6935924)));
+                  print("###########");
+                  print(userLocation["latitude"]);
                 },
                 color: Colors.blue,
                 child: Text(

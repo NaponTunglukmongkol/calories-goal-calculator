@@ -44,16 +44,25 @@ class MenuBook extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Menu'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.camera),
-            onPressed: () {
-              // print(Navigator.push(context,
-              //         MaterialPageRoute(builder: (context) => CameraScreen()))
-              //     .runtimeType);
-            },
-          )
-        ],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Color(0xFF3366FF), Color(0xFF00CCFF)],
+            ),
+          ),
+        ),
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: Icon(Icons.camera),
+        //     onPressed: () {
+        //       // print(Navigator.push(context,
+        //       //         MaterialPageRoute(builder: (context) => CameraScreen()))
+        //       //     .runtimeType);
+        //     },
+        //   )
+        // ],
       ),
       body: Container(
         color: Colors.blueGrey,

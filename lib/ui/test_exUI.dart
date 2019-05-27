@@ -113,7 +113,7 @@ List<Widget> _tiles = <Widget>[
           data[14]['cal'])),
 ];
 
-class Exercise extends StatefulWidget {
+class ExerciseList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -121,7 +121,7 @@ class Exercise extends StatefulWidget {
   }
 }
 
-class ExerciseState extends State<Exercise> {
+class ExerciseState extends State<ExerciseList> {
   String url =
       'https://raw.githubusercontent.com/benning55/exercise/master/db.json';
   Future<String> makeRequest() async {
@@ -138,20 +138,10 @@ class ExerciseState extends State<Exercise> {
 
   @override
   Widget build(BuildContext context) {
-    print(data);
     if (data == null) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Exercise you might interest'),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xFF3366FF), Color(0xFF00CCFF)],
-              ),
-            ),
-          ),
         ),
         body: Center(
           child: CircularProgressIndicator(),

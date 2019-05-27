@@ -63,9 +63,9 @@ class FoodPageState extends State<FoodPage> {
         child: ListTile(
           title: Text(
             "Eaten in Today",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          trailing: Text("Time"),
+          trailing: Text("Time", style: TextStyle(color: Colors.white)),
         ),
       )
     ];
@@ -150,11 +150,11 @@ class FoodPageState extends State<FoodPage> {
                 children: <Widget>[
                   Tile1(_listFood, last7day[6], bmr),
                   const _Example01Tile(Text("Breakfast"),
-                      AssetImage('assets/images/icon/1.png')),
+                      AssetImage('assets/images/icon/salad.png')),
                   const _Example01Tile(
-                      Text("Lunch"), AssetImage('assets/images/icon/2.png')),
-                  const _Example01Tile(
-                      Text("Dinner"), AssetImage('assets/images/icon/3.png')),
+                      Text("Lunch"), AssetImage('assets/images/icon/sea.png')),
+                  const _Example01Tile(Text("Dinner"),
+                      AssetImage('assets/images/icon/steak.png')),
                   Tile_all_food(listFoodToday),
                 ],
                 mainAxisSpacing: 0.0,

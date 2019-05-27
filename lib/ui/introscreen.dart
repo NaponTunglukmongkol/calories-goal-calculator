@@ -20,7 +20,7 @@ class IntroState extends State<Intro> {
 
     slides.add(
       new Slide(
-        title: "ERASER",
+        title: "Want to con",
         description:
             "Allow miles wound place the leave had. To sitting subject no improve studied limited",
         // pathImage: "images/photo_eraser.png",
