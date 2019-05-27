@@ -355,8 +355,9 @@ class Tile_Map extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              MapScreen(lati: 13.6623374, long: 100.6935924)));
+                          builder: (context) => MapScreen(
+                              lati: userLocation["latitude"],
+                              long: userLocation["longitude"])));
                   print("###########");
                   print(userLocation["latitude"]);
                 },
