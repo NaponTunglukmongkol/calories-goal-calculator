@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:health_app/ui/exerciseUI.dart';
+import 'package:health_app/ui/wait.dart';
+
 import 'map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -148,8 +151,8 @@ class MapScreenState extends State<MapScreen> {
           child: FloatingActionButton(
             mini: true,
             onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => GetLocationPage()));
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Wait()));
             },
             materialTapTargetSize: MaterialTapTargetSize.padded,
             backgroundColor: Colors.white10,

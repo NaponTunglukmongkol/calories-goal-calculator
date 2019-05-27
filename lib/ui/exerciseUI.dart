@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/ui/exListScreen.dart';
+import 'package:health_app/ui/map_screen.dart';
 import 'package:health_app/ui/menu_group.dart';
 import 'package:health_app/ui/simple_bar_chart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:location/location.dart';
 // import 'package:percent_indicator/percent_indicator.dart';
 // import 'package:progress_indicators/progress_indicators.dart';
 
@@ -12,6 +14,7 @@ List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
   const StaggeredTile.count(6, 7),
   const StaggeredTile.count(6, 2),
   const StaggeredTile.fit(6),
+  const StaggeredTile.count(6, 2),
   // const StaggeredTile.count(2, 2),
   // const StaggeredTile.count(2, 2),
 ];
@@ -36,6 +39,10 @@ class ExecisePage extends StatefulWidget {
 class ExecisePageState extends State<ExecisePage> {
   String user;
   ExecisePageState(this.user);
+
+  var location = new Location();
+
+  Map<String, double> userLocation;
 
   var url =
       "https://raw.githubusercontent.com/benning55/exercise/master/db.json?fbclid=IwAR2ciBvMxgSOJ9_IPBNVEPfOZAEeYhhAncRaGmvzef92clHLzn6XRQxUB6Q";
@@ -169,6 +176,7 @@ class ExecisePageState extends State<ExecisePage> {
               _Example01Tile(Text("Exercise List"),
                   AssetImage('assets/images/icon/2.png'), last7day[6]),
               Tile_all_food(listFoodToday),
+              Tile_Map(listFoodToday),
             ],
             mainAxisSpacing: 0.0,
             crossAxisSpacing: 0.0,
@@ -316,5 +324,53 @@ class Tile_all_food extends StatelessWidget {
             child: Column(
               children: _listFoodToday,
             )));
+  }
+}
+
+class Tile_Map extends StatelessWidget {
+  Tile_Map(this._listFoodToday);
+  List<Widget> _listFoodToday;
+
+  var location = new Location();
+
+  Map<String, double> userLocation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        color: Colors.white,
+        child: new InkWell(
+            onTap: () {
+              // Navigator.push(
+              //     context, MaterialPageRoute(builder: (context) => MenuBook()));
+            },
+            child: Center(
+              child: RaisedButton(
+                onPressed: () async {
+                  userLocation = await _getLocation();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MapScreen(
+                              lati: userLocation["latitude"],
+                              long: userLocation["longitude"])));
+                },
+                color: Colors.blue,
+                child: Text(
+                  "Get Location",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )));
+  }
+
+  Future<Map<String, double>> _getLocation() async {
+    var currentLocation = <String, double>{};
+    try {
+      currentLocation = await location.getLocation();
+    } catch (e) {
+      currentLocation = null;
+    }
+    return currentLocation;
   }
 }

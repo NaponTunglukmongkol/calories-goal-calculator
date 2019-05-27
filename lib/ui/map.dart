@@ -25,6 +25,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: RaisedButton(
+                
                 onPressed: () async {
                   userLocation = await _getLocation();
                   Navigator.pushReplacement(context, MaterialPageRoute(

@@ -91,7 +91,6 @@ class HomeState extends State<Home> {
                 ),
               ),
               body: Container(
-                  color: Colors.blueGrey,
                   child: Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: new StaggeredGridView.count(
@@ -400,7 +399,6 @@ class Tile3 extends StatelessWidget {
   final Color backgroundColor;
   final IconData iconData;
   final String user;
-  
 
   @override
   Widget build(BuildContext context) {
