@@ -364,14 +364,9 @@ class Tile2 extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          child: Text("1000",
-                              style: TextStyle(fontSize: 50),
-                              textAlign: TextAlign.center),
-                        ),
-                        Container(
-                          child: Text("/1000 cal",
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center),
+                          child: Image.asset(
+                            'assets/images/icon/diet.png', height: 100,
+                          ),
                         ),
                       ],
                     ))
@@ -406,7 +401,7 @@ class Tile3 extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 new Row(
-                  children: <Widget>[Text("Step")],
+                  children: <Widget>[Text("Excersie")],
                 ),
                 Container(
                     alignment: Alignment.center,
@@ -415,14 +410,10 @@ class Tile3 extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          child: Text("1000",
-                              style: TextStyle(fontSize: 50),
-                              textAlign: TextAlign.center),
-                        ),
-                        Container(
-                          child: Text("/1000 cal",
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center),
+                          child: Image.asset(
+                            'assets/images/icon/sport.png', height: 100,
+                            
+                          ),
                         ),
                       ],
                     ))
