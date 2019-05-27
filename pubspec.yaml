@@ -63,6 +63,9 @@ flutter:
   assets:
     - assets/img/
     - assets/images/icon/
+    - assets/images/icon/checked.png
+    - assets/images/icon/burn.png
+    - assets/images/icon/burger.png
     - images/running.png
     - images/jumping-rope.png
     - images/ping-pong.png

@@ -239,6 +239,18 @@ class RegisterScreenState extends State<RegisterScreen> {
                                         "https://img.icons8.com/color/48/000000/user-male-circle.png"
                                   });
                                 });
+                                Firestore.instance.runTransaction(
+                                    (Transaction transaction) async {
+                                  DocumentReference reference = Firestore
+                                      .instance
+                                      .collection('users')
+                                      .document('${user.uid}')
+                                      .collection('all_exercise_add')
+                                      .document();
+                                  await reference.setData({
+                                    "0": '0',
+                                  });
+                                });
                                 user.sendEmailVerification().then((user) {
                                   setState(() {
                                     loading = false;

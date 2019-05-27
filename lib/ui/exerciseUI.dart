@@ -363,7 +363,7 @@ class Tile_Map extends StatelessWidget {
                 },
                 color: Colors.blue,
                 child: Text(
-                  "Get Location",
+                  "Find Fitness",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
